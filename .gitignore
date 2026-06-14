@@ -1,0 +1,108 @@
+# Python environments and caches
+.venv/
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# IDE, OS, and temporary files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+~$*
+*.tmp
+*.temp
+*.log
+
+# Secrets and machine-local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*credentials*
+*secret*
+
+# Raw, external, and derived biological data
+/data/
+/third_party/
+annovar.latest.tar.gz
+
+# Genomic resources and indexes
+*.vcf
+*.vcf.gz
+*.bcf
+*.tbi
+*.csi
+*.fa
+*.fa.gz
+*.fasta
+*.fasta.gz
+*.fna
+*.fna.gz
+*.bam
+*.bai
+*.cram
+*.crai
+*.avinput
+*.tsv.gz
+
+# Trained models, serialized objects, and graph arrays
+/models/
+/results/
+*.pkl
+*.pickle
+*.pt
+*.pth
+*.joblib
+*.onnx
+*.ckpt
+*.npz
+
+# Generated outputs are excluded by default. The clean GitHub branch contains
+# only the explicitly selected compact reports and metric tables.
+outputs/*
+!outputs/real/
+outputs/real/*
+
+!outputs/real/final_comparison/
+outputs/real/final_comparison/*
+!outputs/real/final_comparison/MAGPIE_PARITY_AND_X_RESULTS_MATRIX.md
+
+!outputs/real/federated/
+outputs/real/federated/*
+!outputs/real/federated/FEDERATED_LEARNING_REPORT.md
+!outputs/real/federated/federated_algorithm_comparison.md
+!outputs/real/federated/federated_limitations.md
+!outputs/real/federated/federated_5k_10k_15k_20k_25k_metrics.csv
+!outputs/real/federated/federated_client_distribution_audit.csv
+
+!outputs/real/magpie_x_enhanced/
+outputs/real/magpie_x_enhanced/*
+!outputs/real/magpie_x_enhanced/MAGPIE_X_10K_20K_REPORT.md
+!outputs/real/magpie_x_enhanced/MAGPIE_X_5K_FULL_FUSION_REPORT.md
+!outputs/real/magpie_x_enhanced/magpie_x_10k_20k_metrics.csv
+!outputs/real/magpie_x_enhanced/magpie_x_5k_full_fusion_metrics.csv
+
+!outputs/real/magpie_parity/
+outputs/real/magpie_parity/*
+!outputs/real/magpie_parity/SPLICEAI_10K_20K_LOW_CIRCULARITY_REPORT.md
+
+# Keep only the latest final workbook in the clean public snapshot.
+*.xlsx
+!FYP_Literature_Results_Table_Omar_FINAL_CLARIFIED.xlsx
+
+# Generated office/build artifacts
+*.docx
+*.pptx
+*.pdf
+artifact-build-manifest.json

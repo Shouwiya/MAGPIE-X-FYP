@@ -1,0 +1,48 @@
+project_name: MAGPIE_X
+dry_run: false
+seed: 13
+
+paths:
+  raw_dir: data/raw
+  processed_dir: outputs/real/processed
+  feature_dir: outputs/real/features
+  graph_dir: outputs/real/graphs
+  clinvar: data/raw/clinvar.vcf.gz
+  annovar: null
+  dbnsfp: null
+  spliceai: null
+  chromatin: null
+
+toy:
+  n_variants: 96
+  pathogenic_fraction: 0.48
+  n_genes: 18
+
+features:
+  include_consequence_onehot: true
+  include_biochemical: true
+  include_gene_features: true
+  include_missense_experts: false
+  include_epigenetic: false
+  missing_strategy: median
+  standardize: true
+  graph_feature_groups:
+    - conservation
+    - frequency
+    - biochemical
+    - gene_intolerance
+    - missense_expert
+
+phenotype:
+  enabled: false
+  top_level_groups:
+    - neurologic
+    - cardiovascular
+    - metabolic
+    - cancer
+    - immune
+    - skeletal
+    - renal
+    - sensory
+    - other
+

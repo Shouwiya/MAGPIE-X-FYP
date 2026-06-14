@@ -1,0 +1,18 @@
+output_dir: outputs/toy/results
+thresholds: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
+calibration:
+  methods:
+    - temperature
+    - isotonic
+  n_bins: 10
+benchmarks:
+  external_sets: []
+  proteingym_dir: null
+ablations:
+  - tabular_only
+  - graph_only
+  - tabular_graph
+  - tabular_graph_missense_expert
+  - phenotype_head
+  - calibration
+

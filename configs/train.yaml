@@ -1,0 +1,29 @@
+seed: 13
+device: auto
+output_dir: outputs/toy/experiments/default
+
+split:
+  mode: temporal
+  val_fraction: 0.2
+  test_fraction: 0.2
+  temporal_cutoff: null
+  heldout_gene_fraction: 0.2
+  rare_af_threshold: 0.01
+
+optimization:
+  epochs: 20
+  batch_size: 32
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  patience: 6
+  gradient_clip_norm: 5.0
+
+loss:
+  class_weight: balanced
+  phenotype_weight: 0.2
+
+tracking:
+  save_checkpoints: true
+  save_predictions: true
+  log_every: 5
+

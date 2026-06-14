@@ -1,0 +1,36 @@
+model:
+  architecture: gat
+  hidden_dim: 64
+  dropout: 0.15
+  num_layers: 2
+  activation: relu
+
+tabular:
+  hidden_dims: [96, 64]
+  batch_norm: true
+
+missense_expert:
+  enabled: true
+  expert_columns:
+    - alphamissense_score
+    - esm1b_score
+    - revel_score
+    - varity_score
+    - mutpred_score
+  projection_dim: 24
+
+graph:
+  mode: variant_similarity
+  k_neighbors: 8
+  metric: cosine
+  self_loops: true
+  gat_heads: 4
+  jumping_knowledge: concat
+  residual: true
+  hetero_graph: false
+
+phenotype_head:
+  enabled: false
+  num_groups: 9
+  loss_weight: 0.2
+

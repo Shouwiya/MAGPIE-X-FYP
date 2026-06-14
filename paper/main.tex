@@ -1,0 +1,370 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{url}
+
+\title{MAGPIE-X: Residual Graph and Protein Evidence for Genomic Variant Pathogenicity Prediction}
+
+\author{
+\IEEEauthorblockN{Omar}
+\IEEEauthorblockA{Final Year Project Draft\\
+Department / University Name\\
+Email: student@example.com}
+}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Interpreting genomic variants remains challenging because pathogenicity depends on heterogeneous evidence including allele frequency, sequence consequence, conservation, biochemical context, protein-level constraints, and clinical annotations. This FYP uses a staged design: first evaluate a MAGPIE-parity low-circularity LightGBM using ANNOVAR/refGene, gnomAD allele frequency, conservation, variant type/length, and AA/BLOSUM62 features, then report predictor-rich MAGPIE-X modes separately. On exact paired ClinVar-derived balanced samples, the best controlled MAGPIE-X accuracy is 0.9620 at 5k, 0.9685 at 10k, and 0.9700 at 20k. The 10k best row is a same-split two-layer GraphSAGE residual correction over clean, dbNSFP, SpliceAI, and AlphaMissense evidence; the 20k best row is the LightGBM using clean, dbNSFP, and AlphaMissense features without SpliceAI. Simulated five-client horizontal federated experiments from 5k to 25k reach a best accuracy of 0.9680 at 10k in the circularity-risk FL-B mode, while the best MAGPIE-parity low-circularity federated accuracy is 0.9443. These are random-split simulation results rather than low-circularity, privacy, deployment, or external-validation claims. An earlier 0.9773 GraphSAGE residual result used a different 750-row test split and is retained only as nonpaired context. Gene-held-out, temporal, rare-variant, calibration, and external validation remain required.
+\end{abstract}
+
+\section{Introduction}
+Clinical variant interpretation is a central problem in genomic medicine. Public resources such as ClinVar provide valuable pathogenic and benign labels, but labels are incomplete, unevenly distributed across genes and variant types, and affected by historical ascertainment and interpretation bias. Existing variant effect predictors include annotation-based models such as CADD \cite{kircher2014cadd}, ensemble missense predictors such as REVEL \cite{ioannidis2016revel}, deep learning predictors such as PrimateAI \cite{sundaram2018primateai}, protein language model approaches such as ESM1b \cite{brandes2023esm1b}, evolutionary generative models such as EVE \cite{frazer2021eve}, and multi-type approaches such as MAGPIE \cite{liu2024magpie}.
+
+The objective is not to replace these methods with an overclaimed single score. The first objective is to construct a transparent MAGPIE-parity-current LightGBM using available low-circularity biological annotations. The second objective is to test whether explicitly named MAGPIE-X additions, such as dbNSFP prior-predictor fields, AlphaMissense, ESM-style protein evidence, and graph residual correction, improve on that model under stricter validation.
+
+\section{Literature Review}
+MAGPIE demonstrated that multimodal annotation and gradient-boosted tabular modeling can perform strongly across multiple exonic variant types \cite{liu2024magpie}. AlphaMissense and ESM1b provide missense-focused protein evidence at proteome scale \cite{cheng2023alphamissense,brandes2023esm1b}. EVE models evolutionary constraints from multiple sequence alignments \cite{frazer2021eve}. REVEL, ClinPred, VARITY, M-CAP, MutPred2, MetaRNN, MVP, and related dbNSFP predictors provide strong prior baselines for missense pathogenicity prediction \cite{ioannidis2016revel,alirezaie2018clinpred,wu2021varity,jagadeesh2016mcap,pevzner2020mutpred2,li2022metarnn,qi2021mvp}.
+
+Graph-based work motivates the MAGPIE-X graph branch. VEGN models variant effect prediction on a heterogeneous variant-gene graph \cite{cheng2021vegn}. gMVP uses graph attention over protein context for missense variants \cite{zhang2022gmvp}. GNN-MAP uses multimodal annotations and variant-similarity graphs for multi-type pathogenicity prediction \cite{yu2025gnnmap}.
+
+\subsection{Dataset Roles: Development Versus Evaluation}
+The literature workbook separates training or development data from evaluation benchmarks. Columns named ClinVar, ClinVar Rare, SwissProt/HUMSAVAR, ACMG, and ProteinGym/MAVE report performance on those benchmarks when the paper provides a verifiable value. They do not imply that a separate model was trained independently on every named dataset. A method may be developed using one clinical dataset, mixed clinical and population resources, unsupervised protein sequences, or evolutionary and structural evidence, and then be evaluated on several distinct benchmarks. Each tuple must therefore be read as performance on the named evaluation benchmark, together with the separately reported training/development source.
+
+\subsection{Metric Tuple and Missing-Metric Policy}
+The requested comparison tuple is stricter than the reporting practice of most pathogenicity-prediction papers:
+\[
+\text{(Accuracy, F1, Precision, Recall/Sensitivity, Specificity, MCC, AUROC, AUPRC, Brier, ECE)}.
+\]
+Many papers report only ranking metrics such as AUROC or AUPRC and do not specify a decision threshold or confusion matrix. Threshold-dependent accuracy, F1, precision, recall, specificity, and MCC are not reconstructed in those cases. A dash in the literature tables means that the value was unreported, not verified from the available source, or not applicable to the method or benchmark; it does not denote fabricated zero performance or unfinished project computation. The workbook records a paper-specific missing-value reason and extraction status beside each comparison row.
+
+\section{MAGPIE Reference And Feature Gap}
+The MAGPIE reference point uses ClinVar accessed on 2022-06-24, with 78,089 initially filtered variants across nonsynonymous SNV/missense, stop-gain, start-loss, frameshift, nonframeshift, and stop-loss classes. Labels are benign/likely benign versus pathogenic/likely pathogenic, with conflicting or unknown labels removed. MAGPIE also adds 11,998 gnomAD ultra-rare benign variants with AF between $10^{-5}$ and $10^{-3}$, uses a gene-based split to reduce gene-level leakage, and trains a LightGBM model while excluding prior pathogenicity predictor scores to minimize prior bias.
+
+MAGPIE reports ClinVarTest performance on 4,356 pathogenic and 4,310 benign variants with AUC 0.995 and AUPRC 0.995. Its ClinVarRare subset contains 4,881 variants with AF $<0.01$, AUC 0.992, and accuracy 0.95. Its SwissProt validation starts from 80,840 labelled variants, keeps 71,400 explicitly pathogenic/benign variants, requires unique rsID mapping and exonic status, removes uncertain labels and synonymous SNVs, and removes genes seen in ClinVarTrain.
+
+The current project has ANNOVAR/refGene, gnomAD30, dbNSFP42a, ClinVar, HUMSAVAR/SwissProt, AlphaMissense, and official masked hg38 SpliceAI v1.3 resources, but the current low-circularity mode is only partial MAGPIE parity. Population AF, functional/consequence, conservation, variant-length, clean biochemical amino-acid delta, and BLOSUM62 features are present. The amino-acid fields were derived conservatively for 219,823 of 490,403 rows with one unambiguous canonical substitution. SpliceAI has been audited on separate 5k, 10k, and 20k sidecars and is not merged into the full feature table. ChromHMM/epigenomic and OMIM/inheritance remain missing. Prior pathogenicity predictor-score features are present but circular/risky and are excluded from Stage 1 parity.
+
+\section{Dataset}
+The current project uses the real feature table:
+\[
+\texttt{data/interim/features/basic\_feature\_table.csv}.
+\]
+The table is derived from real ClinVar variants and annotation features from ANNOVAR/dbNSFP/gnomAD-style sources. Synthetic and toy outputs are excluded from reported results. Current controlled experiments use binary benign/pathogenic labels and balanced ClinVar-derived samples. SwissProt/HUMSAVAR has a different role: it is retained as an external-validation resource and is not mixed into the ClinVar training samples. Literature tables may describe SwissProt, SwissVar, or UniProt as training/development sources for published methods, but that literature context does not change the project training protocol.
+
+\section{Methodology}
+The methodology is organized into three stages.
+
+Stage 1 is the MAGPIE-parity-current low-circularity LightGBM. It uses allele-frequency features, ANNOVAR/refGene consequence/type annotations, non-predictor conservation fields, variant length/type features, missingness indicators, and clean amino-acid property deltas with BLOSUM62 where the substitution is unambiguous. Official masked hg38 SpliceAI DS/DP fields are evaluated by concatenating 12 matched columns to the same ClinVar variant rows \cite{jaganathan2019spliceai}. Stage 1 excludes AlphaMissense, ESM, graph outputs, and prior pathogenicity predictor scores such as SIFT, PolyPhen, REVEL, CADD, MutationTaster, MetaSVM, MetaLR, FATHMM, PROVEAN, and M-CAP.
+
+Stage 2 is the MAGPIE-X circularity-risk track. It may add 86 explicitly flagged dbNSFP prior-predictor fields, AlphaMissense score/availability, ESM-style protein evidence, and graph-derived corrections. These additions must be reported separately from the MAGPIE-parity low-circularity LightGBM because they reuse external expert predictions. The implemented graph branch is a two-layer GraphSAGE residual logit correction:
+\[
+z_{\mathrm{final}} = z_{\mathrm{tabular}} + \Delta_{\mathrm{gnn}},
+\]
+where $z_{\mathrm{tabular}}$ is the tabular logit and $\Delta_{\mathrm{gnn}}$ is graph-derived residual evidence.
+
+MAGPIE-parity mode excludes prior pathogenicity predictors and is used for low-circularity evaluation. MAGPIE-X circularity-risk mode intentionally includes external expert predictors and, where specified, GraphSAGE residual logit correction for higher predictive performance.
+
+The MAGPIE-X circularity-risk modes are reported separately from MAGPIE-parity because they include 86 prior-predictor fields and, where specified, expert-model features. Same-split AlphaMissense feature fusion and GraphSAGE residual logit correction are evaluated only when sample alignment is verified.
+
+In this paper, ``+ SpliceAI'' means that DS/DP-derived columns were matched to the same ClinVar rows; ``+ AlphaMissense'' means that an external expert missense score and availability flag were matched to those rows; and ``+ dbNSFP prior predictors'' means that 86 predictor score/rank/prediction fields were concatenated to the same rows. None of these additions provides a new clinical label or a new training dataset. SwissProt/HUMSAVAR is external validation and is not part of the controlled 5k training sample.
+
+Stage 3 is robustness evaluation: gene-held-out validation, temporal validation, rare-variant testing, SwissProt/HUMSAVAR no-overlap validation, calibration analysis, and simulated federated or later held-site evaluation. The current federated experiment is a single-machine feasibility study and is not a privacy or real multi-institution deployment claim. The earlier 97.73\% GraphSAGE residual logit-correction result used a separate 750-row test split and is nonpaired context rather than the controlled A--G result. We are not claiming final improvement over MAGPIE until parity and validation are stronger.
+
+\section{Experimental Setup}
+The current controlled tabular benchmark uses 5k, 10k, and 20k class-balanced ClinVar-derived samples. Each approved sample uses one stratified seed-13 80/20 train/test split: 4,000/1,000 rows at 5k, 8,000/2,000 at 10k, and 16,000/4,000 at 20k. The held-out 20\% partition is used only for final evaluation. LightGBM modes select among six predefined candidates using an additional stratified 20\% validation subset drawn only from the global training partition, with validation AUPRC as the selection criterion. The same-split GraphSAGE residual experiments use the corresponding train/test partition, fixed epochs, and training-node labels only; no validation or test labels are used for graph supervision. The graph is transductive when test-node features participate in message passing, so it is not external validation. A 50k benchmark, gene-held-out evaluation, temporal split, and larger graph experiments remain future work and should not be claimed as completed.
+
+The metric tuple is:
+\[
+\text{(Accuracy, F1-score, Precision, Recall/Sensitivity, Specificity, MCC, AUROC, AUPRC, Brier, ECE)}.
+\]
+
+\subsection{Federated Learning Experimental Setup}
+The federated experiment is simulated horizontal federated learning on one machine. Five clients are synthetic partitions intended to emulate separate data holders; they are not real hospitals, laboratories, or institutions. For each 5k, 10k, 15k, 20k, or 25k balanced ClinVar-derived sample, one stratified seed-13 80/20 train/test split is created first; only the training partition is divided among clients, and every method is evaluated on the same held-out global test set. The resulting counts are 4,000/1,000, 8,000/2,000, 12,000/3,000, 16,000/4,000, and 20,000/5,000 training/test rows, respectively. The IID partition approximately preserves equal class balance per client. The non-IID partition uses reproducible Dirichlet label skew with $\alpha=0.3$. Variant records remain within their assigned client partition during local training. SwissProt/HUMSAVAR is not used in client or server training and remains an external-validation resource.
+
+Three feature modes are reported. FL-A is the 114-feature MAGPIE-parity low-circularity mode containing ANNOVAR/refGene, gnomAD allele-frequency, conservation, variant type/length, and AA/BLOSUM62 evidence. FL-B is the 200-feature MAGPIE-X circularity-risk mode that adds 86 dbNSFP prior-predictor fields. FL-C is the 212-feature MAGPIE-X circularity-risk mode that further adds 12 exact-matched SpliceAI aggregate fields. FL-C is run only at 5k, 10k, and 20k because matching sidecars already exist for those exact samples; no 15k or 25k scores are fabricated.
+
+\subsection{Federated Learning Algorithms}
+The following controls and aggregation methods are compared:
+\begin{enumerate}
+\item \textbf{Centralized baseline:} a two-hidden-layer multilayer perceptron (MLP) is trained on the pooled training partition. No client update is sent or aggregated; this is not federated learning and serves as a pooled-data control.
+\item \textbf{Local-only client models:} one MLP is trained per client and evaluated independently on the shared test set. No information is sent to a server. The report preserves both the client-average tuple and the best local-client result.
+\item \textbf{FedAvg MLP weighted model averaging:} each client receives the global MLP, trains locally, and sends neural-network parameters to the server. The server computes a client-sample-weighted parameter average. This is true federated optimization.
+\item \textbf{FedProx MLP proximal federated optimization:} local training adds $\frac{\mu}{2}\lVert w_{\mathrm{local}}-w_{\mathrm{global}}\rVert_2^2$ with $\mu=0.01$ before the same sample-weighted parameter aggregation. This is true federated optimization intended to reduce non-IID client drift.
+\item \textbf{Federated ensemble / soft-voting probability aggregation:} each client trains a local LightGBM model, then sends predicted probabilities rather than model weights. The server computes a client-size-weighted probability average. This is federated-style ensembling, not FedAvg, because tree parameters are not averaged.
+\end{enumerate}
+
+The MLP uses hidden dimensions 64 and 32 with ReLU activations and dropout 0.1. FedAvg and FedProx run for eight communication rounds with one local epoch per round; the centralized and local-only MLP controls use eight epochs. The local LightGBM ensemble uses 180 trees per client. No separate federated validation split is created: the global 20\% test partition is reserved for final evaluation, while hyperparameters and training schedules are fixed by the experiment configuration. A shared preprocessing transform is fit only on the global training partition so every simulated client uses the same numerical and categorical feature space. This is a single-machine simulation convenience; a deployment would require fixed encoders or federated aggregation of preprocessing statistics. Table~\ref{tab:federated-results} reports the best federated method for each available sample-size and feature-mode pair; the full centralized, local-only, FedAvg, FedProx, and ensemble matrix is retained in the experiment CSV and workbook.
+
+\begin{table*}[t]
+\centering
+\tiny
+\caption{Best simulated federated result for each available sample-size and feature-mode pair}
+\label{tab:federated-results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllrrrrrrrrrr}
+\toprule
+Sample & Feature & Method & Acc. & F1 & Prec. & Rec. & Spec. & MCC & AUROC & AUPRC & Brier & ECE \\
+\midrule
+5k & FL-A & Ensemble (IID) & 0.9310 & 0.9309 & 0.9319 & 0.9300 & 0.9320 & 0.8620 & 0.9775 & 0.9705 & 0.0529 & 0.0240 \\
+5k & FL-B & Ensemble (IID) & 0.9550 & 0.9550 & 0.9541 & 0.9560 & 0.9540 & 0.9100 & 0.9855 & 0.9803 & 0.0357 & 0.0198 \\
+5k & FL-C & Ensemble (IID) & 0.9560 & 0.9563 & 0.9488 & 0.9640 & 0.9480 & 0.9121 & 0.9845 & 0.9784 & 0.0354 & 0.0249 \\
+10k & FL-A & Ensemble (IID) & 0.9340 & 0.9343 & 0.9306 & 0.9380 & 0.9300 & 0.8680 & 0.9825 & 0.9822 & 0.0483 & 0.0220 \\
+10k & FL-B & Ensemble (IID) & 0.9680 & 0.9679 & 0.9699 & 0.9660 & 0.9700 & 0.9360 & 0.9928 & 0.9926 & 0.0253 & 0.0142 \\
+10k & FL-C & Ensemble (IID) & 0.9650 & 0.9650 & 0.9641 & 0.9660 & 0.9640 & 0.9300 & 0.9937 & 0.9935 & 0.0258 & 0.0130 \\
+15k & FL-A & Ensemble (IID) & 0.9353 & 0.9352 & 0.9365 & 0.9340 & 0.9367 & 0.8707 & 0.9835 & 0.9818 & 0.0465 & 0.0108 \\
+15k & FL-B & Ensemble (IID) & 0.9637 & 0.9637 & 0.9640 & 0.9633 & 0.9640 & 0.9273 & 0.9905 & 0.9883 & 0.0298 & 0.0142 \\
+20k & FL-A & Ensemble (IID) & 0.9443 & 0.9440 & 0.9476 & 0.9405 & 0.9480 & 0.8885 & 0.9868 & 0.9846 & 0.0416 & 0.0092 \\
+20k & FL-B & FedAvg (non-IID) & 0.9675 & 0.9675 & 0.9689 & 0.9660 & 0.9690 & 0.9350 & 0.9937 & 0.9929 & 0.0260 & 0.0102 \\
+20k & FL-C & FedAvg (non-IID) & 0.9677 & 0.9677 & 0.9680 & 0.9675 & 0.9680 & 0.9355 & 0.9935 & 0.9928 & 0.0259 & 0.0087 \\
+25k & FL-A & Ensemble (IID) & 0.9386 & 0.9388 & 0.9363 & 0.9412 & 0.9360 & 0.8772 & 0.9820 & 0.9790 & 0.0474 & 0.0134 \\
+25k & FL-B & Ensemble (IID) & 0.9644 & 0.9645 & 0.9625 & 0.9664 & 0.9624 & 0.9288 & 0.9914 & 0.9895 & 0.0287 & 0.0109 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}
+
+The best 5k, 10k, 15k, 20k, and 25k federated accuracies are 0.9560, 0.9680, 0.9637, 0.9677, and 0.9644, respectively. None reaches 0.9700. The overall best federated result is the 10k FL-B IID probability-ensemble row at 0.9680 accuracy; it is circularity-risk because FL-B contains the 86 dbNSFP prior-predictor fields. The best MAGPIE-parity low-circularity federated row is FL-A at 20k with 0.9443 accuracy. These experiments are simulated federated learning on one machine using partitioned ClinVar data. They demonstrate the feasibility of federated training and aggregation but do not prove deployment-level privacy, communication security, or real multi-hospital generalization.
+
+\subsection{Federated Learning Limitations}
+The federated clients are synthetic partitions, and their non-IID variation is label-skew simulation rather than measured institutional heterogeneity. The study does not model secure aggregation, encrypted transport, authentication, client dropout, adversarial clients, differential privacy, communication constraints, or model-inversion resistance. Shared preprocessing is fitted centrally on the global training partition for consistency, which is not a deployment privacy guarantee. The shared test set is a random balanced ClinVar-derived holdout rather than temporal, gene-held-out, held-site, or SwissProt/HUMSAVAR external validation. FL-B and FL-C retain high circularity risk because they include dbNSFP prior-predictor fields. FL-C remains absent at 15k and 25k because exact sidecar features were not available for those samples; no value is imputed or fabricated.
+
+\section{Preliminary Results}
+\begin{table}[t]
+\centering
+\caption{Legacy nonpaired \texttt{reference\_5k} graph experiment}
+\begin{tabular}{lccc}
+\toprule
+Model & Accuracy & AUROC & AUPRC \\
+\midrule
+Predictor-rich XGBoost tabular model & 0.9707 & 0.9946 & 0.9938 \\
+GraphSAGE-only variant graph & 0.9453 & 0.9847 & 0.9785 \\
+XGBoost + GraphSAGE residual logit correction & 0.9773 & 0.9958 & 0.9958 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The GraphSAGE-only variant graph did not outperform the predictor-rich XGBoost tabular model on this split. The XGBoost-plus-GraphSAGE residual logit correction improved accuracy and AUROC on the preliminary split, but calibration did not clearly improve. This experiment used a different 750-row test split and is nonpaired context, not evidence for the controlled A--G comparison.
+
+\section{MAGPIE-X Sample Size Results}
+Table~\ref{tab:sample-size-results} reports the approved tabular sample-size benchmark using the real ClinVar-derived feature table only. The experiment used balanced benign/pathogenic samples, a fixed seed of 13, and a single stratified train/test split for each sample size.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{MAGPIE-X tabular sample-size benchmark results}
+\label{tab:sample-size-results}
+\begin{tabular}{llcccccccccc}
+\toprule
+Sample & Model & Acc. & F1 & Prec. & Rec. & Spec. & MCC & AUROC & AUPRC & Brier & ECE \\
+\midrule
+5k & XGBoost & 0.9570 & 0.9569 & 0.9598 & 0.9540 & 0.9600 & 0.9140 & 0.9935 & 0.9935 & 0.0326 & - \\
+5k & LightGBM & 0.9550 & 0.9550 & 0.9541 & 0.9560 & 0.9540 & 0.9100 & 0.9905 & 0.9893 & 0.0386 & - \\
+5k & RandomForest & 0.9540 & 0.9544 & 0.9469 & 0.9620 & 0.9460 & 0.9081 & 0.9927 & 0.9925 & 0.0321 & - \\
+10k & XGBoost & 0.9670 & 0.9669 & 0.9689 & 0.9650 & 0.9690 & 0.9340 & 0.9930 & 0.9927 & 0.0254 & - \\
+10k & LightGBM & 0.9690 & 0.9688 & 0.9757 & 0.9620 & 0.9760 & 0.9381 & 0.9911 & 0.9903 & 0.0272 & - \\
+10k & RandomForest & 0.9675 & 0.9676 & 0.9652 & 0.9700 & 0.9650 & 0.9350 & 0.9923 & 0.9922 & 0.0259 & - \\
+20k & XGBoost & 0.9683 & 0.9683 & 0.9657 & 0.9710 & 0.9655 & 0.9365 & 0.9935 & 0.9924 & 0.0248 & - \\
+20k & LightGBM & 0.9698 & 0.9698 & 0.9695 & 0.9700 & 0.9695 & 0.9395 & 0.9920 & 0.9904 & 0.0256 & - \\
+20k & RandomForest & 0.9690 & 0.9691 & 0.9667 & 0.9715 & 0.9665 & 0.9380 & 0.9932 & 0.9918 & 0.0255 & - \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Accuracy increases from the 5k sample to the 10k sample and then largely stabilizes around 0.968--0.970 at 20k. LightGBM has the best 20k accuracy and MCC, while XGBoost has the strongest 20k AUROC. AUROC and AUPRC remain high and stable across sample sizes. The sample-size ECE values are omitted because the original run did not save predictions and a metric audit found the original ECE implementation unsuitable for final calibration claims. These are still random, balanced sample benchmarks and are not final clinical validation.
+
+\section{SwissProt/HUMSAVAR External Validation}
+SwissProt/HUMSAVAR external validation is separate from the random ClinVar split and is used to test generalization. It is not mixed into ClinVar model training. Following the MAGPIE evaluation idea, uncertain-significance HUMSAVAR variants are excluded, supervised likely benign/benign and likely pathogenic/pathogenic variants are retained, and genomic mapping is attempted conservatively through dbSNP rsIDs.
+
+From the real HUMSAVAR file, 73,056 supervised variants were parsed after excluding 11,420 uncertain-significance variants. Using local ClinVar \texttt{variant\_summary.txt.gz} rsID matches on GRCh38, 30,122 variants mapped confidently to a unique \texttt{chrom,pos,ref,alt} tuple, while 42,934 variants remained unmapped and were not assigned guessed coordinates. Exact overlap auditing against the current ClinVar-derived feature table found 21,810 exact-overlap rows and 8,312 mapped rows without exact feature-table overlap. Gene-level overlap was high: 29,752 mapped rows were in genes already present in the feature table, leaving 370 rows after gene-overlap removal.
+
+The first SwissProt feature table uses feature reuse by exact \texttt{chrom,pos,ref,alt} join to the current ClinVar-derived feature table. This enabled a pipeline and external-label check, but it is not a fully independent no-overlap validation. The no-exact-overlap subset is empty until the 8,312 non-joined mapped variants receive real annotation. SwissProt labels were not used for training; 5k balanced ClinVar reference models were trained after excluding exact SwissProt-key rows from the ClinVar training pool.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{SwissProt/HUMSAVAR feature-reuse evaluation}
+\label{tab:swissprot-eval}
+\begin{tabular}{lllrrrrrr}
+\toprule
+Subset & Model & $n$ & Acc. & F1 & AUROC & AUPRC & Brier & ECE \\
+\midrule
+All joined & XGBoost & 21810 & 0.9038 & 0.9029 & 0.9844 & 0.9810 & 0.0785 & 0.0919 \\
+All joined & LightGBM & 21810 & 0.9005 & 0.8992 & 0.9841 & 0.9809 & 0.0869 & 0.0950 \\
+All joined & RandomForest & 21810 & 0.9080 & 0.9076 & 0.9841 & 0.9815 & 0.0704 & 0.1066 \\
+Rare AF $\leq$ 0.01 & XGBoost & 6544 & 0.8153 & 0.7923 & 0.9652 & 0.9659 & 0.1546 & 0.1764 \\
+Rare AF $\leq$ 0.01 & LightGBM & 6544 & 0.8134 & 0.7897 & 0.9664 & 0.9676 & 0.1654 & 0.1793 \\
+Rare AF $\leq$ 0.01 & RandomForest & 6544 & 0.8340 & 0.8175 & 0.9684 & 0.9681 & 0.1228 & 0.1742 \\
+No gene overlap & XGBoost & 171 & 0.9006 & 0.8283 & 0.9866 & 0.9529 & 0.0886 & 0.0965 \\
+No gene overlap & LightGBM & 171 & 0.9064 & 0.8400 & 0.9859 & 0.9415 & 0.0945 & 0.1025 \\
+No gene overlap & RandomForest & 171 & 0.9006 & 0.8283 & 0.9857 & 0.9512 & 0.0733 & 0.0967 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+The all-joined feature-reuse subset reaches 0.9005--0.9080 accuracy and 0.9841--0.9844 AUROC. The rare AF subset is harder, with 0.8134--0.8340 accuracy, while the no-gene-overlap subset is very small ($n=171$) and should be read only as an exploratory leakage-control check.
+
+\section{Circularity and Threats to Validity}
+\subsection{Circularity Boundary}
+The strongest threat is circularity: dbNSFP contains many prior predictor scores, including SIFT, PolyPhen, REVEL, CADD, MutationTaster, MetaSVM, MetaLR, AlphaMissense-related fields when available, and other published predictors. A high accuracy result may partly reflect reuse of prior pathogenicity scores rather than independent learning.
+
+The 5k circularity ablation compares a MAGPIE-parity low-circularity feature matrix that removes prior predictor-score columns with a MAGPIE-X circularity-risk matrix that includes dbNSFP predictor scores. AlphaMissense and GraphSAGE evidence are separate later additions and are not implied by the word ``enhanced.''
+
+\begin{table}[t]
+\centering
+\scriptsize
+\caption{Circularity ablation on 5k random balanced split}
+\label{tab:circularity-ablation}
+\begin{tabular}{llrrrrr}
+\toprule
+Mode & Model & Feat. & Acc. & AUROC & AUPRC & ECE \\
+\midrule
+MAGPIE-parity low-circularity & XGBoost & 47 & 0.9250 & 0.9797 & 0.9807 & 0.0288 \\
+MAGPIE-parity low-circularity & LightGBM & 47 & 0.9180 & 0.9759 & 0.9746 & 0.0517 \\
+MAGPIE-parity low-circularity & RandomForest & 47 & 0.9260 & 0.9813 & 0.9815 & 0.0178 \\
+MAGPIE-X dbNSFP-risk & XGBoost & 133 & 0.9570 & 0.9935 & 0.9935 & 0.0223 \\
+MAGPIE-X dbNSFP-risk & LightGBM & 133 & 0.9550 & 0.9905 & 0.9893 & 0.0349 \\
+MAGPIE-X dbNSFP-risk & RandomForest & 133 & 0.9540 & 0.9927 & 0.9925 & 0.0192 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Removing prior predictor-score columns reduces 5k random-split accuracy from 0.9540--0.9570 in the 133-feature MAGPIE-X dbNSFP-risk modes to 0.9180--0.9260 in the 47-feature MAGPIE-parity low-circularity modes. This supports the circularity concern that high random-split accuracy can be partly driven by dbNSFP prior predictor scores, random split overlap, and same-gene leakage.
+
+Our first low-circularity mode drops because predictor scores were removed, but this is not yet full MAGPIE parity. We improve it using clean biological feature engineering while keeping predictor-score circularity removed. The improved mode adds allele-frequency bins and flags, missingness indicators, consequence summaries, non-predictor conservation summaries, variant-length features, and transcript/consequence counts from the existing real feature table. It does not re-add SIFT, PolyPhen, REVEL, CADD, MutationTaster, MetaSVM, MetaLR, FATHMM, PROVEAN, M-CAP, AlphaMissense, ESM, or related prior pathogenicity predictor outputs.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\caption{Clean low-circularity LightGBM feature progression}
+\label{tab:improved-low-circularity}
+\begin{tabular}{lrrrr}
+\toprule
+Sample & Mode & Feat. & Acc. & AUROC \\
+\midrule
+5k & 47-feature parity & 47 & 0.9180 & 0.9759 \\
+5k & 104-feature engineered parity & 104 & 0.9280 & 0.9798 \\
+5k & 114-feature AA/BLOSUM parity & 114 & 0.9210 & 0.9786 \\
+5k & 133-feature dbNSFP-risk & 133 & 0.9550 & 0.9905 \\
+10k & 47-feature parity & 47 & 0.9285 & 0.9771 \\
+10k & 104-feature engineered parity & 104 & 0.9300 & 0.9786 \\
+10k & 114-feature AA/BLOSUM parity & 114 & 0.9350 & 0.9824 \\
+10k & 133-feature dbNSFP-risk & 133 & 0.9690 & 0.9911 \\
+20k & 47-feature parity & 47 & 0.9410 & 0.9840 \\
+20k & 104-feature engineered parity & 104 & 0.9420 & 0.9852 \\
+20k & 114-feature AA/BLOSUM parity & 114 & 0.9467 & 0.9875 \\
+20k & 133-feature dbNSFP-risk & 133 & 0.9698 & 0.9920 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 104-feature engineered low-circularity LightGBM gives a modest gain over the earlier 47-feature MAGPIE-parity model at all tested sample sizes, but the additional AA/BLOSUM group is scale-dependent. It reduces 5k accuracy from 0.9280 to 0.9210, while improving 10k accuracy from 0.9300 to 0.9350 and 20k accuracy from 0.9420 to 0.9467. The corresponding 20k AUROC increases from 0.9852 to 0.9875. These results support further evaluation at the larger approved sample sizes, not a universal improvement claim.
+
+SpliceAI improved the 5k pilot accuracy, but final benefit is evaluated at 10k/20k and later under gene-held-out/external validation. It is treated as a clean MAGPIE-parity splicing feature group, separate from prior pathogenicity predictor scores.
+
+The label-free query VCF produced 5,279 long-form rows for 5,000 unique query variants. Of these, 4,582 variants had at least one real SpliceAI score record and 418 were represented by unmatched placeholders. Per-query modeling features used maximum \texttt{DS\_AG}, \texttt{DS\_AL}, \texttt{DS\_DG}, and \texttt{DS\_DL}, with each \texttt{DP} value taken from the record supplying the corresponding maximum score. The long-form records were preserved, and no clinical label was used during matching or aggregation.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\caption{Preliminary SpliceAI 5k low-circularity pilot}
+\label{tab:spliceai-5k-pilot}
+\begin{tabular}{lrrrrrr}
+\toprule
+Mode & Feat. & Acc. & F1 & MCC & AUROC & AUPRC \\
+\midrule
+AA/BLOSUM & 114 & 0.9260 & 0.9267 & 0.8522 & 0.9788 & 0.9738 \\
+AA/BLOSUM + SpliceAI & 126 & 0.9340 & 0.9343 & 0.8680 & 0.9796 & 0.9718 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On the shared 4,000/1,000 train/test split, adding SpliceAI increased accuracy by 0.0080 and MCC by 0.0159, and reduced Brier score from 0.0537 to 0.0507. However, AUPRC decreased by 0.0020 and ECE increased from 0.0324 to 0.0383. This is mixed pilot evidence, not a universal improvement claim. The SpliceAI query sample was generated with seed 13, whereas the earlier AA/BLOSUM sample-size experiment used seed 5013 for its 5k sample; therefore the earlier 0.9210 AA/BLOSUM result is not the paired comparator for this table.
+
+The 10k and 20k VCFs use the exact approved AA/BLOSUM sample order and are label-free. Exact matching yielded real SpliceAI scores for 9,161 of 10,000 variants and 18,349 of 20,000 variants. The paired clean-feature metrics reproduce the previous AA/BLOSUM results, confirming sample and split alignment.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{Paired SpliceAI 10k/20k low-circularity evaluation}
+\label{tab:spliceai-10k-20k}
+\begin{tabular}{llrrrrrrr}
+\toprule
+Sample & Mode & Acc. & F1 & MCC & AUROC & AUPRC & Brier & ECE \\
+\midrule
+10k & AA/BLOSUM & 0.9350 & 0.9350 & 0.8700 & 0.9824 & 0.9816 & 0.0493 & 0.0267 \\
+10k & AA/BLOSUM + SpliceAI & 0.9350 & 0.9353 & 0.8700 & 0.9820 & 0.9792 & 0.0495 & 0.0260 \\
+20k & AA/BLOSUM & 0.9467 & 0.9468 & 0.8935 & 0.9875 & 0.9865 & 0.0401 & 0.0097 \\
+20k & AA/BLOSUM + SpliceAI & 0.9450 & 0.9449 & 0.8900 & 0.9859 & 0.9846 & 0.0420 & 0.0140 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+At 10k, adding SpliceAI leaves accuracy unchanged at 0.9350, slightly lowers AUROC and AUPRC, and slightly improves ECE. At 20k, it lowers accuracy by 0.0018, AUROC by 0.0016, and AUPRC by 0.0019 while worsening Brier score and ECE. The 5k gain therefore does not generalize consistently in these larger random-split checks. SpliceAI remains an audited sidecar feature group and is not promoted into the default Stage 1 low-circularity feature set pending gene-held-out or external evidence.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{Controlled ClinVar-derived balanced 5k comparison on one shared 4,000/1,000 split}
+\label{tab:magpie-x-enhanced-5k}
+\begin{tabular}{clrrrrrrrr}
+\toprule
+ID & Precisely defined mode & Feat. & Acc. & F1 & MCC & AUROC & AUPRC & Brier & ECE \\
+\midrule
+A & MAGPIE-parity LC LightGBM: refGene + AF + conservation + AA/BLOSUM62 & 114 & 0.9260 & 0.9267 & 0.8522 & 0.9788 & 0.9738 & 0.0537 & 0.0324 \\
+B & A + SpliceAI DS/DP tabular feature fusion & 126 & 0.9340 & 0.9343 & 0.8680 & 0.9796 & 0.9718 & 0.0507 & 0.0383 \\
+C & MAGPIE-X risk LightGBM: A + 86 dbNSFP prior-predictor fields & 200 & 0.9590 & 0.9590 & 0.9180 & 0.9865 & 0.9797 & 0.0337 & 0.0206 \\
+D & C + SpliceAI DS/DP tabular feature fusion & 212 & 0.9620 & 0.9622 & 0.9240 & 0.9856 & 0.9772 & 0.0324 & 0.0266 \\
+E & C + AlphaMissense score/availability tabular feature fusion & 202 & 0.9560 & 0.9558 & 0.9120 & 0.9864 & 0.9804 & 0.0354 & 0.0247 \\
+F & C + SpliceAI + AlphaMissense tabular feature fusion & 214 & 0.9610 & 0.9611 & 0.9220 & 0.9853 & 0.9756 & 0.0332 & 0.0255 \\
+G & F + two-layer GraphSAGE residual logit correction & 214+29 & 0.9590 & 0.9592 & 0.9180 & 0.9861 & 0.9760 & 0.0328 & 0.0151 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+All A--G rows use the exact same 5,000 variant IDs, shared stratified 4,000/1,000 split, and balanced ClinVar-derived labels. SwissProt/HUMSAVAR is not part of training. SpliceAI and AlphaMissense matching used normalized hg38 chromosome, position, REF, and ALT without clinical labels. Modes A--B are low-circularity. Modes C--G are circularity-risk because each contains the same 86 dbNSFP prior-predictor fields. The complete metric tuple, including precision, recall/sensitivity, and specificity, is preserved in the controlled results CSV and mode explanation table.
+
+Relative to mode A, mode C increases accuracy by 0.0330 after adding 86 prior-predictor fields; this is a circularity-risk gain, not low-circularity evidence. Relative to mode B, mode D increases accuracy by 0.0280 after adding the same fields. Within the predictor-rich comparison, SpliceAI raises accuracy from 0.9590 in mode C to 0.9620 in mode D while lowering AUROC and AUPRC and worsening ECE. Mode D is therefore the best controlled accuracy result, but it is not a MAGPIE-parity claim.
+
+AlphaMissense exact hg38 matching covered 2,713 of 2,893 missense variants in the controlled sample using normalized chromosome, position, REF, and ALT; labels and the AlphaMissense category were not used. Non-missense and unmatched variants retained missing scores with an explicit availability flag. Mode E lowered accuracy from 0.9590 to 0.9560 relative to mode C but slightly increased AUPRC from 0.9797 to 0.9804. Mode F produced 0.9610 accuracy, below mode D's 0.9620 without AlphaMissense.
+
+Mode G uses a two-layer GraphSAGE with 64 hidden units, dropout 0.25, and 50 fixed epochs over 5,000 variant nodes and 100,310 directed edges: 14,442 capped same-gene, 29,994 capped same-consequence, and 55,874 k-nearest-neighbor feature-similarity edges. It is a variant-only transductive graph, not a heterogeneous variant-gene graph, and it uses no gene-gene interaction resource. Five-fold out-of-fold tabular logits are used for the 4,000 training nodes, and the 1,000 test-node logits come from a LightGBM fit only on training rows. Graph preprocessing is fit on training nodes; the loss uses training labels only; no validation or test labels are used for supervision. GraphSAGE predicts $\Delta_{\mathrm{gnn}}$ and applies $z_{\mathrm{final}}=z_{\mathrm{tabular}}+\Delta_{\mathrm{gnn}}$, so this is residual logit correction rather than feature stacking. Mode G changes accuracy from 0.9610 in mode F to 0.9590 and AUROC from 0.9853 to 0.9861, while improving ECE from 0.0255 to 0.0151. The older 0.9773 GraphSAGE result remains nonpaired context because it used a different 750-row test split.
+
+\begin{table*}[t]
+\centering
+\scriptsize
+\caption{Controlled MAGPIE-X circularity-risk comparison at 10k and 20k}
+\label{tab:magpie-x-10k-20k}
+\begin{tabular}{clrrrrrrrr}
+\toprule
+Sample & Mode & Feat. & Acc. & F1 & MCC & AUROC & AUPRC & Brier & ECE \\
+\midrule
+10k & C: clean + 86 dbNSFP prior predictors & 200 & 0.9670 & 0.9669 & 0.9340 & 0.9923 & 0.9924 & 0.0267 & 0.0172 \\
+10k & D: C + SpliceAI DS/DP & 212 & 0.9660 & 0.9659 & 0.9320 & 0.9931 & 0.9923 & 0.0283 & 0.0215 \\
+10k & E: C + AlphaMissense; no SpliceAI & 202 & 0.9660 & 0.9659 & 0.9320 & 0.9932 & 0.9932 & 0.0260 & 0.0164 \\
+10k & F: 214-feature tabular + GraphSAGE residual & 214+29 & 0.9685 & 0.9685 & 0.9370 & 0.9934 & 0.9930 & 0.0259 & 0.0102 \\
+20k & C: clean + 86 dbNSFP prior predictors & 200 & 0.9680 & 0.9681 & 0.9360 & 0.9930 & 0.9915 & 0.0247 & 0.0080 \\
+20k & D: C + SpliceAI DS/DP & 212 & 0.9690 & 0.9691 & 0.9380 & 0.9925 & 0.9904 & 0.0256 & 0.0180 \\
+20k & E: C + AlphaMissense; no SpliceAI & 202 & 0.9700 & 0.9700 & 0.9400 & 0.9934 & 0.9919 & 0.0239 & 0.0073 \\
+20k & F: 214-feature tabular + GraphSAGE residual & 214+29 & 0.9688 & 0.9688 & 0.9375 & 0.9942 & 0.9934 & 0.0227 & 0.0058 \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+Within each sample size, these rows use the exact approved A/B variant order and stratified seed-13 80/20 split. AlphaMissense exact matching covered 5,501 of 10,000 total variants (5,501 of 5,875 missense variants) at 10k and 10,864 of 20,000 total variants (10,864 of 11,614 missense variants) at 20k; labels and AlphaMissense class were not used. SpliceAI was available for 9,161 and 18,349 variants, respectively. The GraphSAGE experiments used 10,000 nodes and 213,762 directed edges at 10k, and 20,000 nodes and 454,644 directed edges at 20k. Training labels were visible only for training nodes, while validation and test labels were hidden during graph training. The workbook comparison table names this residual experiment row F; it corresponds to technical mode G in the earlier seven-row 5k table because that table also exposes the intermediate SpliceAI-plus-AlphaMissense tabular mode.
+
+At 10k, the GraphSAGE residual row has the highest accuracy (0.9685), but at 20k the AlphaMissense tabular row has the highest accuracy (0.9700). The 20k GraphSAGE row instead has the strongest AUROC, AUPRC, Brier score, and ECE among the 20k MAGPIE-X rows. No controlled row exceeds 0.9700 accuracy. Every row in Table~\ref{tab:magpie-x-10k-20k} includes the same 86 prior-predictor fields and therefore remains circularity-risk evidence.
+
+Other threats include random-split and same-gene leakage, where variants from the same gene or closely related graph neighborhoods may appear in both train and test data, temporal leakage from ClinVar label updates, class-balance mismatch relative to clinical exomes, calibration drift, and incomplete external validation. Stricter validation is pending and will be addressed through gene-held-out splits, temporal splits, rare-variant tests, calibration metrics, stronger SwissProt/HUMSAVAR annotation, and later held-site experiments. The federated clients are simulated partitions rather than real institutions; communication volume, client dropout, secure aggregation, adversarial clients, differential privacy, and transport security are not modeled. SpliceAI integration carries version, transcript-annotation, masking, genome-reference, normalization, multi-gene aggregation, and sparse-signal risks. The original 5k query VCF lacked explicit contig declarations and generated parser warnings; the 10k/20k VCFs include contig headers. ChromHMM, OMIM, ESM, STRING, ACMG, and ProteinGym remain future parity or extension resources and were not added in this evaluation.
+
+\section{Conclusion}
+MAGPIE-X is a cautious residual-evidence study over real genomic variant features. Clean AA/BLOSUM features improve the approved 10k and 20k low-circularity checks, whereas the SpliceAI 5k gain is not confirmed consistently at 10k/20k. In the controlled predictor-rich comparison, the best accuracy rises from 0.9620 at 5k to 0.9685 at 10k and 0.9700 at 20k. The best 10k row is the same-split GraphSAGE residual correction, while the best 20k row is the AlphaMissense tabular mode without SpliceAI. One controlled non-federated mode reaches exactly 97\%, and none exceeds it. That 97\% row is circularity-risk rather than low-circularity evidence because it includes 86 dbNSFP prior-predictor fields and AlphaMissense. The simulated federated study runs centralized, local-only, FedAvg, FedProx, and tree probability-ensemble comparisons from 5k through 25k. Its best accuracy is 0.9680 at 10k in circularity-risk FL-B; no federated row reaches 97\%, and the best low-circularity federated result is 0.9443. Modes C--G and FL-B/FL-C are reported separately from low-circularity modes A--B and FL-A. Final improvement claims remain conditional on stronger SwissProt/HUMSAVAR validation, circularity ablation, gene-held-out validation, temporal validation, and real held-site evaluation.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,131 @@
+sample_size,feature_mode,client_split_type,client_id,client_train_size,benign_count,pathogenic_count,pathogenic_fraction,unique_gene_count,top_consequence,top_consequence_count,top_consequence_fraction,global_test_size,labels_used_for_partitioning,test_labels_used_for_training
+5000,FL-A,iid,1,800,400,400,0.5,640,missense_variant,467,0.58375,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-A,iid,2,800,400,400,0.5,656,missense_variant,463,0.57875,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-A,iid,3,800,400,400,0.5,646,missense_variant,453,0.56625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-A,iid,4,800,400,400,0.5,640,missense_variant,469,0.58625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-A,iid,5,800,400,400,0.5,628,missense_variant,472,0.59,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-A,non_iid,1,983,940,43,0.04374364191251272,837,missense_variant,903,0.9186164801627671,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-A,non_iid,2,101,34,67,0.6633663366336634,100,missense_variant,41,0.40594059405940597,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-A,non_iid,3,1006,843,163,0.16202783300198806,855,missense_variant,841,0.8359840954274353,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-A,non_iid,4,1723,18,1705,0.9895531050493326,898,frameshift_variant,637,0.3697040046430644,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-A,non_iid,5,187,165,22,0.11764705882352941,177,missense_variant,161,0.8609625668449198,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-B,iid,1,800,400,400,0.5,640,missense_variant,467,0.58375,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-B,iid,2,800,400,400,0.5,656,missense_variant,463,0.57875,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-B,iid,3,800,400,400,0.5,646,missense_variant,453,0.56625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-B,iid,4,800,400,400,0.5,640,missense_variant,469,0.58625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-B,iid,5,800,400,400,0.5,628,missense_variant,472,0.59,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-B,non_iid,1,983,940,43,0.04374364191251272,837,missense_variant,903,0.9186164801627671,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-B,non_iid,2,101,34,67,0.6633663366336634,100,missense_variant,41,0.40594059405940597,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-B,non_iid,3,1006,843,163,0.16202783300198806,855,missense_variant,841,0.8359840954274353,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-B,non_iid,4,1723,18,1705,0.9895531050493326,898,frameshift_variant,637,0.3697040046430644,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-B,non_iid,5,187,165,22,0.11764705882352941,177,missense_variant,161,0.8609625668449198,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-C,iid,1,800,400,400,0.5,640,missense_variant,467,0.58375,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-C,iid,2,800,400,400,0.5,656,missense_variant,463,0.57875,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-C,iid,3,800,400,400,0.5,646,missense_variant,453,0.56625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-C,iid,4,800,400,400,0.5,640,missense_variant,469,0.58625,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-C,iid,5,800,400,400,0.5,628,missense_variant,472,0.59,1000,"yes, only to preserve approximate IID class balance",no
+5000,FL-C,non_iid,1,983,940,43,0.04374364191251272,837,missense_variant,903,0.9186164801627671,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-C,non_iid,2,101,34,67,0.6633663366336634,100,missense_variant,41,0.40594059405940597,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-C,non_iid,3,1006,843,163,0.16202783300198806,855,missense_variant,841,0.8359840954274353,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-C,non_iid,4,1723,18,1705,0.9895531050493326,898,frameshift_variant,637,0.3697040046430644,1000,"yes, only to simulate label-skewed non-IID clients",no
+5000,FL-C,non_iid,5,187,165,22,0.11764705882352941,177,missense_variant,161,0.8609625668449198,1000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-A,iid,1,1600,800,800,0.5,1128,missense_variant,931,0.581875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-A,iid,2,1600,800,800,0.5,1108,missense_variant,940,0.5875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-A,iid,3,1600,800,800,0.5,1120,missense_variant,934,0.58375,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-A,iid,4,1600,800,800,0.5,1123,missense_variant,961,0.600625,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-A,iid,5,1600,800,800,0.5,1116,missense_variant,944,0.59,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-A,non_iid,1,150,142,8,0.05333333333333334,140,missense_variant,140,0.9333333333333333,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-A,non_iid,2,3696,3488,208,0.05627705627705628,2473,missense_variant,3382,0.91504329004329,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-A,non_iid,3,3302,197,3105,0.9403391883706844,1401,frameshift_variant,1151,0.34857662023016356,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-A,non_iid,4,580,17,563,0.9706896551724138,421,frameshift_variant,204,0.35172413793103446,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-A,non_iid,5,272,156,116,0.4264705882352941,245,missense_variant,173,0.6360294117647058,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-B,iid,1,1600,800,800,0.5,1128,missense_variant,931,0.581875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-B,iid,2,1600,800,800,0.5,1108,missense_variant,940,0.5875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-B,iid,3,1600,800,800,0.5,1120,missense_variant,934,0.58375,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-B,iid,4,1600,800,800,0.5,1123,missense_variant,961,0.600625,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-B,iid,5,1600,800,800,0.5,1116,missense_variant,944,0.59,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-B,non_iid,1,150,142,8,0.05333333333333334,140,missense_variant,140,0.9333333333333333,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-B,non_iid,2,3696,3488,208,0.05627705627705628,2473,missense_variant,3382,0.91504329004329,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-B,non_iid,3,3302,197,3105,0.9403391883706844,1401,frameshift_variant,1151,0.34857662023016356,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-B,non_iid,4,580,17,563,0.9706896551724138,421,frameshift_variant,204,0.35172413793103446,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-B,non_iid,5,272,156,116,0.4264705882352941,245,missense_variant,173,0.6360294117647058,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-C,iid,1,1600,800,800,0.5,1128,missense_variant,931,0.581875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-C,iid,2,1600,800,800,0.5,1108,missense_variant,940,0.5875,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-C,iid,3,1600,800,800,0.5,1120,missense_variant,934,0.58375,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-C,iid,4,1600,800,800,0.5,1123,missense_variant,961,0.600625,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-C,iid,5,1600,800,800,0.5,1116,missense_variant,944,0.59,2000,"yes, only to preserve approximate IID class balance",no
+10000,FL-C,non_iid,1,150,142,8,0.05333333333333334,140,missense_variant,140,0.9333333333333333,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-C,non_iid,2,3696,3488,208,0.05627705627705628,2473,missense_variant,3382,0.91504329004329,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-C,non_iid,3,3302,197,3105,0.9403391883706844,1401,frameshift_variant,1151,0.34857662023016356,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-C,non_iid,4,580,17,563,0.9706896551724138,421,frameshift_variant,204,0.35172413793103446,2000,"yes, only to simulate label-skewed non-IID clients",no
+10000,FL-C,non_iid,5,272,156,116,0.4264705882352941,245,missense_variant,173,0.6360294117647058,2000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-A,iid,1,2400,1200,1200,0.5,1523,missense_variant,1367,0.5695833333333333,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-A,iid,2,2400,1200,1200,0.5,1532,missense_variant,1398,0.5825,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-A,iid,3,2400,1200,1200,0.5,1508,missense_variant,1384,0.5766666666666667,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-A,iid,4,2400,1200,1200,0.5,1544,missense_variant,1397,0.5820833333333333,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-A,iid,5,2400,1200,1200,0.5,1516,missense_variant,1377,0.57375,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-A,non_iid,1,3357,70,3287,0.9791480488531427,1352,frameshift_variant,1316,0.3920166815609175,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-A,non_iid,2,1217,1145,72,0.05916187345932621,1006,missense_variant,1115,0.9161873459326212,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-A,non_iid,3,1272,872,400,0.31446540880503143,964,missense_variant,905,0.7114779874213837,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-A,non_iid,4,2285,1938,347,0.15185995623632384,1625,missense_variant,1911,0.8363238512035011,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-A,non_iid,5,3869,1975,1894,0.48953217885758593,2180,missense_variant,2262,0.5846471956577927,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-B,iid,1,2400,1200,1200,0.5,1523,missense_variant,1367,0.5695833333333333,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-B,iid,2,2400,1200,1200,0.5,1532,missense_variant,1398,0.5825,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-B,iid,3,2400,1200,1200,0.5,1508,missense_variant,1384,0.5766666666666667,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-B,iid,4,2400,1200,1200,0.5,1544,missense_variant,1397,0.5820833333333333,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-B,iid,5,2400,1200,1200,0.5,1516,missense_variant,1377,0.57375,3000,"yes, only to preserve approximate IID class balance",no
+15000,FL-B,non_iid,1,3357,70,3287,0.9791480488531427,1352,frameshift_variant,1316,0.3920166815609175,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-B,non_iid,2,1217,1145,72,0.05916187345932621,1006,missense_variant,1115,0.9161873459326212,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-B,non_iid,3,1272,872,400,0.31446540880503143,964,missense_variant,905,0.7114779874213837,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-B,non_iid,4,2285,1938,347,0.15185995623632384,1625,missense_variant,1911,0.8363238512035011,3000,"yes, only to simulate label-skewed non-IID clients",no
+15000,FL-B,non_iid,5,3869,1975,1894,0.48953217885758593,2180,missense_variant,2262,0.5846471956577927,3000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-A,iid,1,3200,1600,1600,0.5,1906,missense_variant,1811,0.5659375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-A,iid,2,3200,1600,1600,0.5,1904,missense_variant,1847,0.5771875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-A,iid,3,3200,1600,1600,0.5,1894,missense_variant,1831,0.5721875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-A,iid,4,3200,1600,1600,0.5,1921,missense_variant,1907,0.5959375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-A,iid,5,3200,1600,1600,0.5,1920,missense_variant,1886,0.589375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-A,non_iid,1,1017,244,773,0.76007866273353,694,missense_variant,401,0.3942969518190757,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-A,non_iid,2,5450,1044,4406,0.808440366972477,2146,missense_variant,1894,0.3475229357798165,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-A,non_iid,3,2641,2628,13,0.004922377887163953,1928,missense_variant,2526,0.9564558879212419,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-A,non_iid,4,473,20,453,0.9577167019027484,354,frameshift_variant,166,0.35095137420718814,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-A,non_iid,5,6419,4064,2355,0.3668795762579841,3316,missense_variant,4352,0.677987225424521,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-B,iid,1,3200,1600,1600,0.5,1906,missense_variant,1811,0.5659375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-B,iid,2,3200,1600,1600,0.5,1904,missense_variant,1847,0.5771875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-B,iid,3,3200,1600,1600,0.5,1894,missense_variant,1831,0.5721875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-B,iid,4,3200,1600,1600,0.5,1921,missense_variant,1907,0.5959375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-B,iid,5,3200,1600,1600,0.5,1920,missense_variant,1886,0.589375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-B,non_iid,1,1017,244,773,0.76007866273353,694,missense_variant,401,0.3942969518190757,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-B,non_iid,2,5450,1044,4406,0.808440366972477,2146,missense_variant,1894,0.3475229357798165,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-B,non_iid,3,2641,2628,13,0.004922377887163953,1928,missense_variant,2526,0.9564558879212419,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-B,non_iid,4,473,20,453,0.9577167019027484,354,frameshift_variant,166,0.35095137420718814,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-B,non_iid,5,6419,4064,2355,0.3668795762579841,3316,missense_variant,4352,0.677987225424521,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-C,iid,1,3200,1600,1600,0.5,1906,missense_variant,1811,0.5659375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-C,iid,2,3200,1600,1600,0.5,1904,missense_variant,1847,0.5771875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-C,iid,3,3200,1600,1600,0.5,1894,missense_variant,1831,0.5721875,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-C,iid,4,3200,1600,1600,0.5,1921,missense_variant,1907,0.5959375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-C,iid,5,3200,1600,1600,0.5,1920,missense_variant,1886,0.589375,4000,"yes, only to preserve approximate IID class balance",no
+20000,FL-C,non_iid,1,1017,244,773,0.76007866273353,694,missense_variant,401,0.3942969518190757,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-C,non_iid,2,5450,1044,4406,0.808440366972477,2146,missense_variant,1894,0.3475229357798165,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-C,non_iid,3,2641,2628,13,0.004922377887163953,1928,missense_variant,2526,0.9564558879212419,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-C,non_iid,4,473,20,453,0.9577167019027484,354,frameshift_variant,166,0.35095137420718814,4000,"yes, only to simulate label-skewed non-IID clients",no
+20000,FL-C,non_iid,5,6419,4064,2355,0.3668795762579841,3316,missense_variant,4352,0.677987225424521,4000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-A,iid,1,4000,2000,2000,0.5,2213,missense_variant,2346,0.5865,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-A,iid,2,4000,2000,2000,0.5,2190,missense_variant,2309,0.57725,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-A,iid,3,4000,2000,2000,0.5,2233,missense_variant,2322,0.5805,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-A,iid,4,4000,2000,2000,0.5,2293,missense_variant,2311,0.57775,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-A,iid,5,4000,2000,2000,0.5,2260,missense_variant,2331,0.58275,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-A,non_iid,1,5936,929,5007,0.8434973045822103,2224,frameshift_variant,1990,0.33524258760107817,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-A,non_iid,2,982,315,667,0.6792260692464358,714,missense_variant,435,0.4429735234215886,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-A,non_iid,3,462,297,165,0.35714285714285715,413,missense_variant,320,0.6926406926406926,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-A,non_iid,4,11580,7479,4101,0.35414507772020726,4814,missense_variant,8007,0.6914507772020725,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-A,non_iid,5,1040,980,60,0.057692307692307696,881,missense_variant,950,0.9134615384615384,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-B,iid,1,4000,2000,2000,0.5,2213,missense_variant,2346,0.5865,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-B,iid,2,4000,2000,2000,0.5,2190,missense_variant,2309,0.57725,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-B,iid,3,4000,2000,2000,0.5,2233,missense_variant,2322,0.5805,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-B,iid,4,4000,2000,2000,0.5,2293,missense_variant,2311,0.57775,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-B,iid,5,4000,2000,2000,0.5,2260,missense_variant,2331,0.58275,5000,"yes, only to preserve approximate IID class balance",no
+25000,FL-B,non_iid,1,5936,929,5007,0.8434973045822103,2224,frameshift_variant,1990,0.33524258760107817,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-B,non_iid,2,982,315,667,0.6792260692464358,714,missense_variant,435,0.4429735234215886,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-B,non_iid,3,462,297,165,0.35714285714285715,413,missense_variant,320,0.6926406926406926,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-B,non_iid,4,11580,7479,4101,0.35414507772020726,4814,missense_variant,8007,0.6914507772020725,5000,"yes, only to simulate label-skewed non-IID clients",no
+25000,FL-B,non_iid,5,1040,980,60,0.057692307692307696,881,missense_variant,950,0.9134615384615384,5000,"yes, only to simulate label-skewed non-IID clients",no
