@@ -4,7 +4,9 @@ Companion for **What Pooled AUROC Hides: A Consequence-Stratified Pathogenicity 
 
 ## What is reproducible here?
 
-This is an **aggregate-verification and publication-asset release**, not an independently reproducible raw-data-to-trained-model release. It checks arithmetic against supplied aggregate evidence and regenerates tables and vector figures. It does not independently validate the provenance or truth of the supplied results, recreate bootstrap samples from individual predictions, or retrain the models.
+This provides **aggregate verification** plus optional **prepared-input primary retraining**. It is not complete raw-data-to-paper replication. The aggregate commands do not retrain models or recreate bootstrap samples. See [training/README.md](training/README.md) for the separate training command, which needs the full repository checkout and separately obtained research inputs.
+
+Version `conference-audit-v1.1` adds a portable primary refit. A fresh-environment author-side run on 17 November 2026 rebuilt gene components and refitted both nested OOF arms: all ten selected configurations and fold assignments matched; all metrics agreed within 1e-10; the maximum probability difference over 20,000 aligned rows was 0.0. This is not independent external validation or raw-annotation replication. The v1 tag preserves the aggregate-only release.
 
 The manuscript sources are an analysis snapshot, not an approved camera-ready submission. No IEEE PDF eXpress approval is implied. The default build is anonymous; authorship metadata must be resolved separately for submission.
 

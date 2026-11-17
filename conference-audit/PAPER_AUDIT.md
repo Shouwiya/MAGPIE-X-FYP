@@ -4,7 +4,7 @@
 
 Addressed in part: release aggregate evidence, exact recorded configurations/field manifests, verification and figure-generation scripts, pinned dependencies and explicit execution instructions. SciPy is now an explicit dependency because the verifier imports `scipy.stats.binomtest`.
 
-Not addressed in full: independent end-to-end model retraining. This package must not be described as fully reproducing raw annotation, folds, model fitting, or bootstrap intervals from individual predictions. See DATA_AND_RETRAINING.md.
+Also addressed in v1.1: prepared-input primary retraining, tested against historical folds, selected configurations and predictions. Not addressed in full: independent raw-annotation-to-all-experiments replication or new external validation. The aggregate workflow does not rerun bootstraps from individual predictions. See DATA_AND_RETRAINING.md.
 
 ## External validation
 
@@ -12,7 +12,7 @@ Not experimentally addressed by this release. The manuscript correctly states th
 
 ## Repository link
 
-The earlier 20-reference manuscript had no GitHub URL and said that no public companion was deposited. The companion manuscript now links to the conference-audit-v1 version tag and explicitly limits the reproducibility claim. No DOI is claimed.
+The earlier 20-reference manuscript had no GitHub URL. The companion now links to conference-audit-v1.1 and explicitly limits the reproducibility claim. No DOI is claimed.
 
 ## Camera-ready items (not completed by this code release)
 

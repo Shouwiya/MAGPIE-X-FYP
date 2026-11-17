@@ -12,4 +12,4 @@ Performed in a new Windows Python 3.12 virtual environment, separate from the or
 
 Two portability defects were repaired: SciPy is explicitly pinned, and Matplotlib uses the non-interactive Agg backend rather than requiring Tk.
 
-No model was retrained and no new external/temporal cohort was evaluated. Historical audit records under `evidence/` remain historical records, not claims that this release reran those experiments.
+No model was retrained by the aggregate workflow described above. A subsequent primary refit is documented separately in `training/VALIDATION.md` for v1.1. No new external/temporal cohort was evaluated. Historical records under `evidence/` remain historical records.

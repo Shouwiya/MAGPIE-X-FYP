@@ -13,12 +13,12 @@ Upstream acquisition starts with the official ClinVar archive (https://ftp.ncbi.
 1. Recover and legally obtain the recorded source snapshots and the original preprocessing/annotation/transcript policy.
 2. Rebuild the 114-field table. `feature_manifest.json` specifies field names, not a complete raw-annotation construction recipe. `recovered_model_provenance.json` splits numeric and categorical fields and records input hashes.
 3. Reconstruct the gene-component map by unioning all co-reported raw ClinVar gene symbols before sampling, plus the eligible-row selection, sampling and fold construction. Individual assignments are not distributed.
-4. Port the author-side experiment entry points out of their dependency on `conference-paper-v2/experiments`, retained research tables and private prediction checkpoints. The historical FYP code in the repository root is not a drop-in implementation of the conference audit.
+4. Use `training/run_gene_blocked.py --primary-only` for the portable primary refit. It imports helpers from the full repository and reconstructs components from the VCF without historical prediction checkpoints for fitting. The newer consequence/control and ten paired-seed experiments still need additional porting; the root FYP entry points alone do not recreate the full audit.
 5. Run preprocessing within training folds, the specified nested selection, paired splits/ablations, and conditional component bootstrap; compare exported aggregates with the retained evidence using appropriate tolerances.
 
 The recorded training environment includes LightGBM 4.6.0, scikit-learn 1.7.0, NumPy 2.3.0 and pandas 2.3.0. The aggregate-only requirements intentionally omit LightGBM because no model is trained here. Recorded settings include balanced class weights and `subsample_freq=0`; row-subsampling fractions therefore do not activate row bagging.
 
-The author-side reproduction delta in `recovered_model_provenance.json` is a historical recorded result, not a new rerun performed by `verify_evidence.py`. Hashes cannot reconstruct absent inputs. Full retraining remains an open reproducibility limitation until the above recipe is implemented and tested independently.
+The delta in `recovered_model_provenance.json` is historical, not a rerun by `verify_evidence.py`. A separate primary refit completed on 17 November 2026 (see `training/VALIDATION.md`). Hashes cannot reconstruct absent inputs. Complete raw-annotation-to-all-experiments replication remains unresolved.
 
 ## External/temporal validation
 

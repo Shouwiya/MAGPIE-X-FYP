@@ -5,8 +5,8 @@
 For **What Pooled AUROC Hides: A Consequence-Stratified Pathogenicity Audit**
 (ICIC 2026, paper 53), start with [conference-audit/README.md](conference-audit/README.md).
 It contains aggregate evidence, recorded model configurations, verification code,
-and figure/table regeneration instructions. It is not a raw-data-to-model
-replication release. The FYP experiments below, including SwissProt evaluation,
+figure/table regeneration instructions, and a prepared-input primary retraining
+entry point. It is not complete raw-data-to-paper replication. The FYP experiments below, including SwissProt evaluation,
 are separate from that conference audit and must not be conflated with it.
 
 MAGPIE-X is a final-year research project for pathogenicity prediction of human
@@ -47,8 +47,12 @@ SwissProt/HUMSAVAR source files, feature tables, prediction sidecars, and model
 binaries. They must be obtained from their official sources under the relevant
 licenses and placed locally according to the paths accepted by each script.
 
-The committed reports contain aggregate metrics only. SwissProt/HUMSAVAR is
-used as external validation and is not mixed into ClinVar training.
+The committed reports contain aggregate metrics only. The older SwissProt/HUMSAVAR
+experiment excluded exact test keys from its training sample, but its available
+features were reused by exact ClinVar variant join. Its saved no-exact-overlap
+evaluation had zero usable rows. It is an external-label/reference-model check,
+not fully independent validation of this conference audit. Fresh annotation of
+non-overlapping variants is still required.
 
 ## Installation
 
