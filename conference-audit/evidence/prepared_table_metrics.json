@@ -1,0 +1,18 @@
+{
+  "accuracy": 0.9392,
+  "precision": 0.9632468996617812,
+  "recall_sensitivity": 0.9463191316547294,
+  "specificity": 0.9242682360229209,
+  "f1": 0.9547079856972587,
+  "mcc": 0.8625861159330175,
+  "auroc": 0.9809409628450904,
+  "auprc": 0.9884955572613103,
+  "brier": 0.044840134263444034,
+  "ece": 0.02222954382465005,
+  "n": 20000,
+  "pathogenic_fraction": 0.67715,
+  "sampling": "unstratified 20,000-row sample from the 490,403-row prepared eligible table",
+  "split": "five-fold connected-gene-component StratifiedGroupKFold",
+  "model_selection": "pre-specified LightGBM candidate 5; no tuning on this secondary analysis",
+  "interpretation": "prepared-table prevalence sensitivity; not a clinical prevalence estimate"
+}

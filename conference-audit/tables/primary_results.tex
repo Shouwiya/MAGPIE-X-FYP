@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\caption{OOF evaluations on the same 20,000 rows and separate holdout sensitivity. Original OOF arms use nested tuning; fixed-B random equals the original random arm. AF ranking supplies no threshold/probability metrics. Each holdout tests 4,000 variants. Entries are rounded independently; differences use unrounded values. Full precision is in the companion.}
+\label{tab:primary}
+\centering\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Evaluation & Accuracy & MCC & AUROC & AP & Brier & ECE \\
+\midrule
+Random stratified, five-fold OOF & 0.943 & 0.885 & 0.985 & 0.982 & 0.043 & 0.009 \\
+Gene-component-blocked, five-fold OOF & 0.939 & 0.879 & 0.984 & 0.981 & 0.046 & 0.014 \\
+First-gene blocked, nested tuning & 0.940 & 0.879 & 0.984 & 0.981 & 0.046 & 0.016 \\
+Component blocked, fixed B & 0.940 & 0.880 & 0.984 & 0.981 & 0.046 & 0.011 \\
+Consequence-only logistic, blocked & 0.883 & 0.781 & 0.892 & 0.916 & 0.097 & 0.002 \\
+AF-only ranking, blocked & -- & -- & 0.557 & 0.515 & -- & -- \\
+\midrule
+Random 80/20, ten-seed mean $\pm$ SD & $0.941\pm0.004$ & $0.882\pm0.009$ & $0.984\pm0.002$ & $0.981\pm0.003$ & $0.044\pm0.003$ & $0.015\pm0.004$ \\
+\bottomrule
+\end{tabular}
+\end{table*}

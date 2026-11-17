@@ -1,0 +1,14 @@
+{
+  "method": "two-sided Wilson score, nominal 95%, independent Bernoulli rows",
+  "source_sha256": "87b1a48f122a481821d696c2710ff9a0955f685644cd42364e105ccfab009b9a",
+  "strata": 10,
+  "new_training": false,
+  "auroc_intervals_computed": false,
+  "limitations": [
+    "No gene-component dependence adjustment",
+    "No refitting uncertainty",
+    "Not a replacement for stratum AUROC/bootstrap intervals"
+  ],
+  "eligible_pathogenic_fraction": 0.6760235969192684,
+  "unstratified_sample_pathogenic_fraction": 0.67715
+}

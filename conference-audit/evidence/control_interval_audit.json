@@ -1,0 +1,9 @@
+{
+  "status": "PASS",
+  "replicates": 2000,
+  "seed": 92613,
+  "unit": "full-source connected component",
+  "fixed_predictions": true,
+  "rank_implementation": "exact weighted tie-group AUROC and non-interpolated AP",
+  "cross_check": "all six scores against sklearn on three bootstrap draws; atol 1e-12"
+}

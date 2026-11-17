@@ -1,0 +1,20 @@
+\section{Discussion and Limitations}
+
+\subsection{What the stratification establishes}
+Global balancing leaves frameshift/nonsense predominantly pathogenic and missense predominantly benign. A model can exploit this structure without resolving difficult within-type cases. Persistence under unstratified sampling and consequence removal argues against a balancing-only or consequence-fields-only explanation, but does not identify a cause. These data cannot distinguish intrinsically poor benign-frameshift discrimination from insufficient benign training examples. Correlated annotations and transcript policy remain alternatives.
+
+Component intervals condition on fitted scores; overlapping training folds add dependence. Boundary threshold estimates can produce degenerate bootstrap intervals, motivating the separately labeled Wilson check, which itself ignores clustering. Neither interval estimates clinical operating characteristics.
+
+\subsection{What the partition comparison does not isolate}
+The sample's 6,024 first-gene labels become 5,820 components: 204 fewer groups (3.4\%), not 204 affected variants. The incremental ranking effect is unresolved, but transitive union closes reported-gene paths through unsampled records. Protein families, homology, and shared annotation histories remain unblocked.
+
+Fixed-B controls reduce the tuning confound, but changing partitions necessarily changes training composition. Paired seed variation and fixed-prediction intervals address distinct uncertainties; neither is external-cohort validation. Pooled OOF ranking compares scores from different fitted models, not one prospective deployed classifier.
+
+\subsection{External validity}
+Learned annotations remain; ClinVar assertions may incorporate computational evidence, and comparator training overlap is unaudited. The 2026 labels and 2021 dbNSFP generation are not historically synchronized. The recovered ANNOVAR installation reports annotation-script revision dated 2025-03-02 and table-wrapper revision dated 2022-08-02; hashes identify current files at the logged path, not proof of unchanged historical binaries. AlphaMissense's exact release remains unverified. No independent, ancestry-stratified, or prospective validation was performed. A label-temporal test needs verified first-availability dates and must disclose contemporary annotations; last-evaluated dates or file timestamps are insufficient.
+
+\subsection{Reproducibility scope}
+The versioned companion provides aggregate evidence, feature definitions, tuning configurations, provenance hashes, and scripts for arithmetic checks and figure/table regeneration. It is available in the \href{https://github.com/Shouwiya/MAGPIE-X-FYP/tree/conference-audit-v1/conference-audit}{MAGPIE-X-FYP repository (conference-audit-v1)}. Row-level variants, labels, predictions, feature values, and fitted artifacts are excluded. Full retraining still requires research inputs and author-side scripts; this release does not reproduce source annotation or model fitting independently. No DOI is claimed.
+
+\subsection{Data and declarations}
+This retrospective computational audit uses ClinVar-derived variant assertions and population annotations, with no new participant recruitment or individual patient records. It makes no claim of institutional ethics exemption. This research received no external funding. The authors declare no conflict of interest.

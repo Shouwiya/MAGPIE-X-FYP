@@ -1,0 +1,13 @@
+{
+  "analysis": "post-hoc exact decomposition of pooled AUROC by consequence-pair membership",
+  "total_positive_negative_pairs": 100000000,
+  "within_consequence_pairs": 19889327,
+  "across_consequence_pairs": 80110673,
+  "within_pair_fraction": 0.19889327,
+  "across_pair_fraction": 0.80110673,
+  "within_consequence_pair_weighted_auroc": 0.9519061655530127,
+  "across_consequence_pair_auroc": 0.9916998949690511,
+  "pooled_auroc": 0.98378519,
+  "within_pairs_from_missense_fraction": 0.976668944102533,
+  "inference": "descriptive identity from unrounded aggregate metrics; no new cohort, model, confidence interval or causal effect"
+}

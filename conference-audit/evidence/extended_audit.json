@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "same_rows_and_component_map": true,
+  "outer_splits_recreated_exactly": true,
+  "inner_split_check": "recreated from saved outer rows and recorded splitter/seed; no refitting",
+  "blocked_fold_checks": [
+    {
+      "outer_fold": 1,
+      "test_rows": 3712,
+      "outer_component_overlap": 0,
+      "inner_component_overlap": 0,
+      "inner_train_rows": 13171,
+      "inner_validation_rows": 3117
+    },
+    {
+      "outer_fold": 2,
+      "test_rows": 3883,
+      "outer_component_overlap": 0,
+      "inner_component_overlap": 0,
+      "inner_train_rows": 12594,
+      "inner_validation_rows": 3523
+    },
+    {
+      "outer_fold": 3,
+      "test_rows": 4124,
+      "outer_component_overlap": 0,
+      "inner_component_overlap": 0,
+      "inner_train_rows": 12511,
+      "inner_validation_rows": 3365
+    },
+    {
+      "outer_fold": 4,
+      "test_rows": 4210,
+      "outer_component_overlap": 0,
+      "inner_component_overlap": 0,
+      "inner_train_rows": 12696,
+      "inner_validation_rows": 3094
+    },
+    {
+      "outer_fold": 5,
+      "test_rows": 4071,
+      "outer_component_overlap": 0,
+      "inner_component_overlap": 0,
+      "inner_train_rows": 12721,
+      "inner_validation_rows": 3208
+    }
+  ],
+  "ten_seed_metrics_recomputed": true,
+  "seed13_prior_target_agreement": "recorded historical check, not re-accessed original FYP result",
+  "exact_row_comparator_metrics_recomputed": true,
+  "secondary_metrics_recomputed": true,
+  "limitations": [
+    "No raw-source reconstruction or training was performed",
+    "Consequence summaries and ablation metrics are checked against retained aggregate artifacts",
+    "No row-level data exported"
+  ],
+  "input_sha256": {
+    "gene_blocked/gene_blocked_predictions.csv": "a8a9fa4976ef185f6b30094ed6c95eef2629678b079ef9d75e071607aafcc8e4",
+    "gene_blocked/gene_component_map.csv.gz": "079baa37006845caa3215fbb4e7ff4404b124fc16042f5e30f6bfef01e73b771",
+    "repeated_seed/repeated_seed_predictions.csv.gz": "4cdc242989346e13a7e1e7fea423860d8f7d882117b413ea20c18636d0617f50",
+    "repeated_seed/repeated_seed_metrics.csv": "07c732df5d38f3829cc6c14291d82f329299f959c66d07928b74fbd5b5373661",
+    "comparators/cadd_revel_exact_rows.csv.gz": "ce4be51504180e9095dd3f0f9a26e79ccbbd1c55e399079c575ff65eff5d9f68",
+    "comparators/cadd_revel_summary.csv": "187161cd616352da1bc9cd13af9093de58e1c75e68553f28d3d8f3bdfe39b68f",
+    "gene_blocked/alphamissense_paired_predictions.csv": "1ebbd0697e72cca248154492c7bfa6c7eb948dad2febfe964d060821d9e9b7d0",
+    "prevalence/natural_prevalence_gene_blocked_predictions.csv": "940afab4d28ac89eedfdfe7c26493f9a76eb59adb137cb670f56c09dff1813e7"
+  }
+}

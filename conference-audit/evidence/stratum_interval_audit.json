@@ -1,0 +1,16 @@
+{
+  "method": "percentile 95% component bootstrap within each consequence, fixed OOF scores",
+  "replicates": 2000,
+  "seed_base": 90213,
+  "seed_assignment": "90213 + alphabetical stratum index",
+  "source_consequence_alignment": "exact-key one-to-one; all historical stratum AUROCs reproduce",
+  "classes": "reject resampled draws lacking either class; rejection counts reported per stratum",
+  "paired_ablation": true,
+  "limitations": [
+    "No refitting",
+    "Overlapping CV training sets induce extra dependence",
+    "Intervals are marginal, not simultaneous",
+    "Boundary threshold estimates can have degenerate bootstrap intervals"
+  ],
+  "input_header_sha256": "b2292ef98843dd180d0e5c13e931cdc896d8eef51abc7eb94b4cff0853555514"
+}

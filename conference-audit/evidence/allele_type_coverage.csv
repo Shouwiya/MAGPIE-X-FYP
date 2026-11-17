@@ -1,0 +1,4 @@
+allele_type,n,CADD_available,REVEL_available,AlphaMissense_available
+SNV,15184,15015,11337,10864
+length_changing,4719,0,0,0
+length_preserving_non_SNV,97,0,0,0

@@ -1,0 +1,9 @@
+{
+  "sample_seed": 20013,
+  "outer_seed": 13,
+  "first_gene": "StratifiedGroupKFold; same six candidates; gene-disjoint inner tuning",
+  "fixed_B": "both arms without nested tuning; model seeds 14-18",
+  "consequence_logit": "19 fields; training-only imputation, one-hot and StandardScaler(with_mean=False); L2 C=1; lbfgs; max_iter=2000; balanced class weights; no tuning",
+  "AF_ranking": "negative gnomAD30_genome AF; missing AF imputed with outer-training median; no labels used; no probability or threshold claim",
+  "full_reproduction_max_delta": 1.1102230246251565e-16
+}

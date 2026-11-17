@@ -1,0 +1,18 @@
+\begin{table}[t]
+\caption{Selected LightGBM configurations. Recovered model construction uses balanced class weights and \texttt{subsample\_freq=0}: the requested row fractions are inactive. Column sampling is active. All six candidates and constructor defaults are in the companion.}
+\label{tab:config}
+\centering\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Parameter & A & B & C \\
+\midrule
+Trees & 500 & 700 & 1,000 \\
+Learning rate & .05 & .04 & .025 \\
+Leaves / min. child samples & 31 / 20 & 31 / 30 & 63 / 40 \\
+Maximum depth & not set & 6 & 8 \\
+Column / requested row fraction & .90 / .90 & .95 / .95 & .90 / .80 \\
+L1 / L2 & .00 / .00 & .00 / 1.00 & .05 / 1.50 \\
+\bottomrule
+\end{tabular}
+\end{table}

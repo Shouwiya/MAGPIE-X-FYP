@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\caption{Consequence-specific OOF results ($n\geq80$). P/B: pathogenic/benign including likely labels; $\pi=P/n$. Brackets: marginal 95\% component-bootstrap AUROC intervals (2,000 replicates within each stratum; fixed predictions, no refitting). Sensitivity/specificity use threshold 0.5. AP must be interpreted alongside $\pi$, particularly for frameshift and nonsense.}
+\label{tab:consequence}
+\centering\footnotesize
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Consequence & $n$ & P/B & $\pi$ & AP & AUROC [95\% CI] & Sens. & Spec. \\
+\midrule
+Missense & 11,614 & 2,026/9,588 & 0.174 & 0.815 & 0.958 [0.952, 0.964] & 0.742 & 0.955 \\
+Frameshift & 3,856 & 3,788/68 & 0.982 & 0.985 & 0.563 [0.491, 0.633] & 1.000 & 0.000 \\
+Nonsense & 2,505 & 2,450/55 & 0.978 & 0.992 & 0.816 [0.743, 0.880] & 0.996 & 0.364 \\
+Splice donor & 878 & 836/42 & 0.952 & 0.999 & 0.980 [0.969, 0.989] & 0.993 & 0.619 \\
+Splice acceptor & 750 & 713/37 & 0.951 & 0.987 & 0.906 [0.813, 0.979] & 0.996 & 0.486 \\
+In-frame deletion & 185 & 68/117 & 0.368 & 0.402 & 0.490 [0.400, 0.585] & 0.132 & 0.932 \\
+In-frame insertion & 87 & 21/66 & 0.241 & 0.295 & 0.497 [0.342, 0.643] & 0.095 & 0.970 \\
+Initiator codon & 81 & 72/9 & 0.889 & 0.985 & 0.904 [0.764, 1.000] & 0.986 & 0.778 \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,15 @@
+\begin{table*}[t]
+\caption{Exact-row comparisons, not a common leaderboard. Each score and the blocked local model (MX) use identical available rows. Coverage is relative to the 20,000-variant sample; $\pi$ is the subset's pathogenic fraction. Subsets differ between comparators, but not between models within a row.}
+\label{tab:comparators}
+\centering\footnotesize
+\setlength{\tabcolsep}{6.2pt}
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Score & Shared $n$ & Coverage (\%) & $\pi$ & MX AUROC & Score AUROC & MX AP & Score AP \\
+\midrule
+CADD & 15,015 & 75.1 & 0.368 & 0.983 & 0.967 & 0.970 & 0.946 \\
+REVEL & 11,337 & 56.7 & 0.182 & 0.960 & 0.964 & 0.831 & 0.895 \\
+AlphaMissense & 10,864 & 54.3 & 0.182 & 0.958 & 0.960 & 0.820 & 0.866 \\
+\bottomrule
+\end{tabular}
+\end{table*}

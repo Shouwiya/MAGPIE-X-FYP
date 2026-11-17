@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "scope": "fixed saved predictions only; no refitting, new cohort or new uncertainty claim",
+  "absolute_tolerance": 1e-12,
+  "comparisons": [
+    {
+      "comparison": "random-minus-gene-component-blocked",
+      "seed": 91013,
+      "metrics": [
+        {
+          "metric": "accuracy",
+          "replicates": 1000,
+          "ci95_low": 0.0010697408241108319,
+          "ci95_high": 0.005499538465933343
+        },
+        {
+          "metric": "mcc",
+          "replicates": 1000,
+          "ci95_low": 0.0021419632152213097,
+          "ci95_high": 0.011004924237292463
+        },
+        {
+          "metric": "auroc",
+          "replicates": 1000,
+          "ci95_low": 0.00027229415291423755,
+          "ci95_high": 0.00141286691822258
+        },
+        {
+          "metric": "auprc",
+          "replicates": 1000,
+          "ci95_low": -0.00018971218840896638,
+          "ci95_high": 0.0019832512822337083
+        },
+        {
+          "metric": "brier",
+          "replicates": 1000,
+          "ci95_low": -0.003696383855150955,
+          "ci95_high": -0.0014662936169275264
+        },
+        {
+          "metric": "ece",
+          "replicates": 1000,
+          "ci95_low": -0.006968009815700855,
+          "ci95_high": -0.00227281877761036
+        }
+      ]
+    },
+    {
+      "comparison": "MX-minus-CADD",
+      "seed": 20260831,
+      "metrics": [
+        {
+          "metric": "auroc",
+          "replicates": 1000,
+          "ci95_low": 0.012621889265564946,
+          "ci95_high": 0.01792858226614448
+        },
+        {
+          "metric": "auprc",
+          "replicates": 1000,
+          "ci95_low": 0.01909839899738025,
+          "ci95_high": 0.03077721640031274
+        }
+      ]
+    },
+    {
+      "comparison": "MX-minus-REVEL",
+      "seed": 20260832,
+      "metrics": [
+        {
+          "metric": "auroc",
+          "replicates": 1000,
+          "ci95_low": -0.010356371262477956,
+          "ci95_high": 0.001486375822983783
+        },
+        {
+          "metric": "auprc",
+          "replicates": 1000,
+          "ci95_low": -0.08871858418485011,
+          "ci95_high": -0.040381690510737735
+        }
+      ]
+    },
+    {
+      "comparison": "MX-minus-AlphaMissense",
+      "seed": 92013,
+      "metrics": [
+        {
+          "metric": "auroc",
+          "replicates": 1000,
+          "ci95_low": -0.007369077774686259,
+          "ci95_high": 0.00458492078042559
+        },
+        {
+          "metric": "auprc",
+          "replicates": 1000,
+          "ci95_low": -0.07158066585368902,
+          "ci95_high": -0.022729082967782838
+        }
+      ]
+    }
+  ]
+}

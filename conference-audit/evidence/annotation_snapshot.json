@@ -1,0 +1,45 @@
+{
+  "historical_invocation_date": "2026-05-20",
+  "logged_protocol": "refGene,gnomad30_genome,dbnsfp42a",
+  "logged_operations": "g,f,f",
+  "assembly": "hg38",
+  "catalogue_dbnsfp42a_date": "2021-07-10",
+  "catalogue_url": "https://annovar.openbioinformatics.org/en/latest/user-guide/download/",
+  "caveat": "Current files at the logged installation path; no contemporaneous historical binary checksum was recorded.",
+  "files": [
+    {
+      "file": "annotate_variation.pl",
+      "bytes": 228730,
+      "sha256": "9840d7b4451d79a04c0bd15ce364c4707ddb355b3d796f7b4b47b6e8a850580a",
+      "date": "our $DATE =\t'$Date: 2025-03-02 22:37:01 -0500 (Sun,  2 Mar 2025) $';  ",
+      "revision": "our $REVISION = '$Revision: e6f51b5d49d5359078ffd7f52c8f440706810731 $';"
+    },
+    {
+      "file": "table_annovar.pl",
+      "bytes": 42936,
+      "sha256": "a3c67e1eb9b8c966e1224539432bab96c0b0003c854445f8dd7775156abdcf4b",
+      "date": "our $DATE =\t'$Date: 2022-08-02 22:48:58 -0400 (Tue,  2 Aug 2022) $';",
+      "revision": "our $REVISION = '$Revision: 8f9c9f42b094bb89b47888b2fddd9824db5e384b $';"
+    },
+    {
+      "file": "humandb/hg38_refGene.txt",
+      "bytes": 25673940,
+      "sha256": "7a475ea2f4410a99ffd234dd3fef534306de5f78f6257692544ad83bd2529e97"
+    },
+    {
+      "file": "humandb/hg38_refGeneMrna.fa",
+      "bytes": 302975562,
+      "sha256": "75b1ff6ff376ed9408a17839369cd689d6eb5aa6ddb846a0038c4d10e6d9cec2"
+    },
+    {
+      "file": "humandb/hg38_dbnsfp42a.txt",
+      "bytes": 48078700563,
+      "sha256": "0952f292bff581aa903bc0fa669b3cc190a283e5728da91fce806baa8f51f19b"
+    },
+    {
+      "file": "humandb/hg38_gnomad30_genome.txt",
+      "bytes": 72616940323,
+      "sha256": "035d665eefd0f0ea94622d9239280ade94ca6973ade825ee745d3b4dec3bb841"
+    }
+  ]
+}

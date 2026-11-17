@@ -1,5 +1,14 @@
 # MAGPIE-X
 
+## Accepted conference paper companion
+
+For **What Pooled AUROC Hides: A Consequence-Stratified Pathogenicity Audit**
+(ICIC 2026, paper 53), start with [conference-audit/README.md](conference-audit/README.md).
+It contains aggregate evidence, recorded model configurations, verification code,
+and figure/table regeneration instructions. It is not a raw-data-to-model
+replication release. The FYP experiments below, including SwissProt evaluation,
+are separate from that conference audit and must not be conflated with it.
+
 MAGPIE-X is a final-year research project for pathogenicity prediction of human
 protein-altering variants. The repository separates two experimental tracks:
 

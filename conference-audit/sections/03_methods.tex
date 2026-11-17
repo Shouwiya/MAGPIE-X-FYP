@@ -1,0 +1,35 @@
+\section{Data and Methods}
+
+\subsection{Data lineage and feature boundary}
+The source is the 2026-05-03 ClinVar GRCh38 VCF: 490,403 unique chromosome--position--reference--alternate keys, comprising 331,524 pathogenic/likely-pathogenic and 158,879 benign/likely-benign variants after exclusion of uncertain/conflicting interpretations. These are variants, not patients. The logged annotation protocol uses ANNOVAR/refGene \cite{wang2010annovar}, \texttt{gnomAD30\_genome} \cite{karczewski2020gnomad}, and dbNSFP 4.2a. ANNOVAR's catalogue dates its dbNSFP42a build to 2021-07-10 \cite{annovar2026catalogue}; this is not the date of our ClinVar labels.
+
+The 114 fields comprise 41 population-frequency, 30 conservation/functional, 19 consequence, 14 geometry/type, and 10 amino-acid/BLOSUM62 fields \cite{henikoff1992blosum}, including derived summaries and fitCons \cite{gulko2015fitcons}. Coordinates, identifiers, label/review metadata, and 86 prior pathogenicity-predictor fields are excluded; learned annotations remain. The feature schema is fixed from the prepared source table. Median imputation and categorical encoding are fitted within training partitions.
+
+\subsection{Components, partitions, and model selection}
+The prepared parser retains the first \texttt{GENEINFO} symbol, but 54,602 eligible variants report multiple symbols. Full-source transitive unions connect all co-reported genes before sampling: 19,927 symbols form 14,514 components across 490,403 matched eligible records. This preserves links through unsampled eligible variants. Given fixed eligibility, topology uses gene associations, not outcomes or model features.
+
+The primary sample contains 10,000 variants per class (sampling seed 20,013), 6,024 first-gene symbols, and 5,820 components. Five-fold shuffled \texttt{StratifiedGroupKFold} (scikit-learn), seed 13, assigns each component to one outer test fold. A random stratified five-fold control uses the same rows (Fig.~\ref{fig:design}). Each row receives two OOF probabilities. This compares partition protocols, including fold composition and selection, not an isolated causal effect of leakage. The blocked estimand concerns held-out reported-gene components in this prepared population.
+
+LightGBM 4.6.0 \cite{ke2017lightgbm} is chosen from six configurations per outer training partition, maximizing AP on the first split of a five-fold inner splitter (approximately 80/20; component-disjoint when blocked). Preprocessing and the winner are refitted on all outer training rows. Random folds select B; blocked folds select B, C, A, C, B (Table~\ref{tab:config}); estimator/inner seeds are 14--18. All fits use inverse-frequency balanced class weights and inactive row bagging. Original model reconstruction reproduced every saved primary probability within $1.2\times10^{-16}$.
+
+\input{tables/configurations}
+
+\subsection{Metrics and uncertainty}
+Classes use probability $\geq0.5$, an experimental cutoff, not a ClinGen evidence-strength threshold. We report ranking, threshold, and calibration metrics. AP is non-interpolated average precision, $\sum_k(R_k-R_{k-1})P_k$, historically labeled AUPRC. Ten-bin positive-class ECE weights each bin's absolute mean-probability versus positive-fraction difference by its sample fraction. No post-hoc calibration is fitted.
+
+Random-minus-blocked differences use 1,000 paired bootstrap replicates (seed 91,013), resampling whole connected components. Percentile 95\% intervals preserve pairing and within-component dependence but condition on fitted OOF predictions: no models are retrained. They omit database/cohort uncertainty and dependence from overlapping training sets \cite{bengio2004variance}. No formal multi-metric significance claim or row-level McNemar test is made.
+
+Ten paired OOF runs use seeds $s=13$--22, redrawing balanced samples with seed $20{,}000+s$. Both arms use the same rows; outer seed $s$ and inner/model seed $s+f$ change with fold $f$. We report per-seed differences, mean/sample SD, and exploratory two-sided sign tests, without multiplicity adjustment. Separately, ten complete 80/20 holdouts summarize the historical procedure; seed 13 is its maximum. All runs reuse one finite source population, not independent clinical cohorts.
+
+\subsection{Evidence and consequence analyses}
+Drop-one-family ablations retain blocked folds and full-model configurations, refitting without retuning. Additional controls use first-gene blocking with nested tuning, and fixed B in both random and component-blocked arms. A consequence-only logistic model uses 19 fields, training-only imputation/one-hot encoding and scaling, L2 $C=1$, balanced weights, and no tuning. An AF-only baseline ranks negative gnomAD AF, imputing missing AF with the outer-training median. Both use the blocked folds; AF scores are not probabilities. CADD PHRED, REVEL, and official GRCh38 AlphaMissense scores are matched to identical available rows per comparison, with paired component intervals.
+
+An unstratified 20k sample contains 13,543 pathogenic variants ($\pi=0.67715$), drawn from a table with $\pi=331{,}524/490{,}403=0.67602$. It fixes B under component blocking and retains balanced training weights. Rows and selection differ from the balanced analysis; this does not isolate prevalence or class-weight effects.
+
+Finally, we stratify the saved gene-component-blocked predictions by prepared consequence. AUROC is the fraction of correctly ordered positive--negative pairs, assigning half credit to ties. Partitioning these pairs into within- and across-consequence comparisons gives the descriptive identity
+\begin{equation}
+A_{\mathrm{pooled}} = w A_{\mathrm{within}} + (1-w)A_{\mathrm{across}},\quad
+w=\frac{\sum_c n_c^+ n_c^-}{N^+N^-}.
+\label{eq:mixture}
+\end{equation}
+Here $w=0.1989$ and $1-w=0.8011$ (rounded). $A_{\mathrm{within}}$ weights strata by $n_c^+n_c^-$. All ten strata contribute; groups with at least 80 rows are displayed. Stratum AUROC and paired ablation differences use 2,000 component-bootstrap replicates within each consequence (seeds $90{,}213+i$, alphabetical index $i$), rejecting draws without both classes. These are marginal, fixed-prediction intervals, not simultaneous or refitting intervals. Count-based Wilson intervals are retained as an independent-row sensitivity check at boundary error rates.

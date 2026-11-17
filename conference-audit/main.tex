@@ -1,0 +1,44 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{cite}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+% Anonymous by default. main-camera-ready.tex enables the named author file.
+\newif\ificicanonymous
+\ifdefined\CameraReady
+  \icicanonymousfalse
+\else
+  \icicanonymoustrue
+\fi
+
+\begin{document}
+\raggedbottom
+\title{What Pooled AUROC Hides:\\A Consequence-Stratified Pathogenicity Audit}
+\ificicanonymous
+  \author{\IEEEauthorblockN{Anonymous submission}}
+\else
+  \input{authors}
+\fi
+\maketitle
+
+\begin{abstract}
+Strong pooled discrimination can hide errors within molecular consequence types. Global class balancing does not ensure adequate representation of both classes within each type. We audit a local annotation-based LightGBM pipeline using gene-component-blocked out-of-fold evaluation, consequence-specific bootstrap intervals, ablations, simple baselines, and partition controls. Pooled AUROC is 0.984, but most positive--negative pairs compare different consequences. All 68 benign frameshift variants are false positives; this failure persists in a separate unstratified sample and after removing consequence features. In-frame ranking intervals include chance, limiting conclusions for these smaller strata. First-gene and transitive-component blocking give similar pooled results, while repeated paired evaluation distinguishes partition effects from protocol variability. Excluding prior pathogenicity-predictor fields retains learned biological annotations and does not guarantee freedom from leakage. This evaluation audit shows why consequence-specific denominators, uncertainty, and targeted controls must accompany pooled ranking before biological conclusions are drawn.
+\end{abstract}
+
+\begin{IEEEkeywords}
+variant pathogenicity, feature provenance, gene-component-blocked evaluation, AUROC decomposition
+\end{IEEEkeywords}
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_methods}
+\input{sections/04_results}
+\input{sections/05_discussion}
+\input{sections/06_conclusion}
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+\end{document}

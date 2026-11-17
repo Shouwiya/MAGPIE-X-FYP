@@ -1,0 +1,8 @@
+{
+  "n": 20000,
+  "AF_missing": 11838,
+  "AF_missing_fraction": 0.5919,
+  "AF_nonmissing_zero": 50,
+  "allele_types_defined_by": "retained reference/alternate lengths, not consequence labels",
+  "note": "Observed annotation availability is not the theoretical scoring scope of each tool."
+}

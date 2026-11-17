@@ -1,0 +1,22 @@
+{
+  "rows": 20000,
+  "components": 5820,
+  "complete_oof": true,
+  "no_group_overlap": true,
+  "recomputed_metrics_agree_at_1e_12": true,
+  "auprc_implementation": "sklearn average_precision_score, not trapezoidal area",
+  "consequence_counts_reconcile": true,
+  "tuning_candidates": 6,
+  "saved_prediction_sha256": "a8a9fa4976ef185f6b30094ed6c95eef2629678b079ef9d75e071607aafcc8e4",
+  "aggregate_source_hashes": {
+    "experiments/gene_blocked/gene_blocked_metrics.csv": "d95494aa89b4aff2a84f1d59143ed64a00fc1885b0049d9b8a358aa5b23b9b4c",
+    "experiments/gene_blocked/random_vs_gene_paired_statistics.csv": "35f54cd323e52c930712a0c2ef9f8664df6f47579fa46b55ab718b0814347104",
+    "experiments/gene_blocked/feature_family_ablation_metrics.csv": "869131bf7faed3dad7c8017e73e8ea56ee0ab9a0b4960016aa679b220fcafc8b",
+    "experiments/repeated_seed/repeated_seed_metrics.csv": "07c732df5d38f3829cc6c14291d82f329299f959c66d07928b74fbd5b5373661",
+    "experiments/repeated_seed/repeated_seed_summary.csv": "8311cde849a1be955c3cedcd86c674e5aff0e7d1e73b1b7d0779207b99d9d241",
+    "experiments/comparators/cadd_revel_summary.csv": "187161cd616352da1bc9cd13af9093de58e1c75e68553f28d3d8f3bdfe39b68f",
+    "experiments/comparators/cadd_revel_paired_statistics.csv": "e599e183844afef21fe558de71c9a7e83a8b6b3e52a4be00525ce973e3871e8f",
+    "experiments/gene_blocked/alphamissense_paired_statistics.csv": "5fd5f79dfdac5ef6d0449d82130dcbd423ed9c31e37ae3542d13469d3b46ca74",
+    "experiments/prevalence/natural_prevalence_reliability.csv": "d6c204fa8a595e2e3f5bffe3b5721d9ddb1005e15fbf4fdff4df90940d956b01"
+  }
+}

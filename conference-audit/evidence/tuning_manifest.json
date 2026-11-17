@@ -1,0 +1,121 @@
+{
+  "candidate_configurations": {
+    "1": {
+      "colsample_bytree": 0.9,
+      "learning_rate": 0.05,
+      "min_child_samples": 20,
+      "n_estimators": 500,
+      "num_leaves": 31,
+      "reg_alpha": 0.0,
+      "reg_lambda": 0.0,
+      "subsample": 0.9
+    },
+    "2": {
+      "colsample_bytree": 0.85,
+      "learning_rate": 0.04,
+      "min_child_samples": 20,
+      "n_estimators": 700,
+      "num_leaves": 63,
+      "reg_alpha": 0.0,
+      "reg_lambda": 0.5,
+      "subsample": 0.9
+    },
+    "3": {
+      "colsample_bytree": 0.85,
+      "learning_rate": 0.035,
+      "min_child_samples": 50,
+      "n_estimators": 800,
+      "num_leaves": 63,
+      "reg_alpha": 0.05,
+      "reg_lambda": 1.0,
+      "subsample": 0.85
+    },
+    "4": {
+      "colsample_bytree": 0.8,
+      "learning_rate": 0.03,
+      "min_child_samples": 80,
+      "n_estimators": 900,
+      "num_leaves": 127,
+      "reg_alpha": 0.1,
+      "reg_lambda": 2.0,
+      "subsample": 0.85
+    },
+    "5": {
+      "colsample_bytree": 0.95,
+      "learning_rate": 0.04,
+      "max_depth": 6,
+      "min_child_samples": 30,
+      "n_estimators": 700,
+      "num_leaves": 31,
+      "reg_alpha": 0.0,
+      "reg_lambda": 1.0,
+      "subsample": 0.95
+    },
+    "6": {
+      "colsample_bytree": 0.9,
+      "learning_rate": 0.025,
+      "max_depth": 8,
+      "min_child_samples": 40,
+      "n_estimators": 1000,
+      "num_leaves": 63,
+      "reg_alpha": 0.05,
+      "reg_lambda": 1.5,
+      "subsample": 0.8
+    }
+  },
+  "fold_selections": [
+    {
+      "evaluation": "random_stratified_5fold",
+      "outer_fold": 1,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "random_stratified_5fold",
+      "outer_fold": 2,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "random_stratified_5fold",
+      "outer_fold": 3,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "random_stratified_5fold",
+      "outer_fold": 4,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "random_stratified_5fold",
+      "outer_fold": 5,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "gene_component_blocked_5fold",
+      "outer_fold": 1,
+      "candidate_id": 5
+    },
+    {
+      "evaluation": "gene_component_blocked_5fold",
+      "outer_fold": 2,
+      "candidate_id": 6
+    },
+    {
+      "evaluation": "gene_component_blocked_5fold",
+      "outer_fold": 3,
+      "candidate_id": 1
+    },
+    {
+      "evaluation": "gene_component_blocked_5fold",
+      "outer_fold": 4,
+      "candidate_id": 6
+    },
+    {
+      "evaluation": "gene_component_blocked_5fold",
+      "outer_fold": 5,
+      "candidate_id": 5
+    }
+  ],
+  "estimator_seed": "13 + outer_fold (folds 1 through 5)",
+  "selection": "average precision on first split of five-fold inner splitter; refit on all outer training rows",
+  "unlogged_defaults": "Only explicitly recorded constructor parameters are reproduced here. In particular subsample_freq is not recorded; configured subsample does not alone establish active row bagging."
+}
